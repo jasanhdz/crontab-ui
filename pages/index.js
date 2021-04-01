@@ -1,10 +1,10 @@
-import React from 'react'
+import Wrapper from 'common/wrapper'
 
 function Index() {
   return (
-    <div>
+    <Wrapper>
       <h1>Hello world</h1>
-    </div>
+    </Wrapper>
   )
 }
 

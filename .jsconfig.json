@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "common/*": [
+        "./components/common/*"
+      ],
+      "~*/": [
+        "components/*",
+        "common/*",
+        "home/*",
+        "utils/*",
+        "theme/*",
+        "hooks/*",
+        "services/*"
+      ],
+      "test/*": [
+        "test/*"
+      ]
+    }
+  }
+}
