@@ -2,7 +2,6 @@ import { getWorkflow } from 'services/workflow'
 import createToken from 'services/createToken'
 
 export default function WorkFlow({ workflow }) {
-  console.log(workflow)
   return (
     <div>
       <h1>Worflow</h1>

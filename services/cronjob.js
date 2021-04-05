@@ -7,7 +7,6 @@ export async function getAllCronJobs(token) {
       headers: { Accept: 'application/json', Authorization: token },
     })
     const data = await res.json()
-    console.log(data)
     return data
   } catch({ message }) {
     console.error(message)

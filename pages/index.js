@@ -1,10 +1,10 @@
-import Wrapper from 'common/wrapper'
+export default function Index() {
+  return <h1>Hello world</h1>
+}
 
-export default function Index({ workflows = [] }) {
-  console.log(workflows)
-  return (
-    <Wrapper>
-      <h1>Hello world</h1>
-    </Wrapper>
-  )
+export function getServerSideProps(ctx) {
+  if (ctx.res) {
+    ctx.res.writeHead(302, { Location: '/cronjob' })
+    ctx.res.end()
+  }
 }
