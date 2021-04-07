@@ -19,7 +19,7 @@ function Select({ variant, value, onChange, label, items, className, ...otherPro
       {/* <MenuItem value="*">
         <em>*</em>
       </MenuItem> */}
-      {items.map((item) => <MenuItem value={item.value}>{item.tile}</MenuItem>)}
+      {items.map((item, idx) => <MenuItem key={idx} value={item.value}>{item.tile}</MenuItem>)}
       </SelectStyled>
   </FormControl>
   )

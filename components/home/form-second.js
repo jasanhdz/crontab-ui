@@ -1,8 +1,10 @@
-import styled from 'styled-components'
 import { Checkbox, FormControlLabel, FormGroup, Radio } from '@material-ui/core'
 import { useState } from 'react'
+import styled from 'styled-components'
+import { addCheckedValue, cronTabOption } from 'utils/date-values'
 import Select from 'common/select'
-import useInputValue from 'hooks/use-input-value'
+import useCronTabOption from 'hooks/use-crontab-option'
+import { getSplitValues } from 'utils/crontab'
 
 const SelectStyled = styled(Select)`
   margin: 0 10px;
@@ -29,96 +31,114 @@ const FormSecondStyled = styled.div`
   }
 `
 
-export default function FormSecond({ items, base, values }) {
-  const selectStart = useInputValue(1)
-  const selectOneValue = useInputValue(values.one)
-  const selectSecondValue = useInputValue(values.two)
-  const [value, setValue] = useState('every')
-  const [state, setState] = useState(items) 
-  const handleChangeRadio = event => {
-    setValue(event.target.value)
+export default function FormSecond({ rawItems, base, name, values, handleValues }) {
+  const [items, setItems] = useState(addCheckedValue(values, ',', rawItems))
+  const handleChecked = (event) => {
+    items[event.target.name].checked = event.target.checked
+    setItems([...items])
+    const data = items.filter(item => item.checked).map(item => item.value)
+    handleValues(name, data.toString() || '*')
   }
-  const handleChecked = (event, tile) => {
-    setState({ ...state, [event.target.name]: event.target.checked })
+  const selectStart = useCronTabOption(getSplitValues(values, '/', items, true), name, handleValues, true)
+  const selectBetween = useCronTabOption(getSplitValues(values, '-', items), name, handleValues)
+  const [option, setOption] = useState(cronTabOption(values))
+  const handleChangeOption = event => {
+    setOption(event.target.value)
+    switch (event.target.value) {
+      case 'every':
+        return handleValues(name, '*')
+      case 'starting':
+        return handleValues(name, `${selectStart.one}/${selectStart.two}`)
+      case 'many':
+        const data = items.filter(item => item.checked).map(item => item.value)
+        return handleValues(name, data.toString() || '*')
+      case 'between':
+        return handleValues(name, `*/${selectBetween.one}-${selectBetween.two}`)
+      default:
+        return handleValues(name, '*')
+    }
   }
   return (
     <FormSecondStyled>
       <div className="center">
         <Radio
-          checked={value === 'every'}
-          onChange={handleChangeRadio}
+          checked={option === 'every'}
+          onChange={handleChangeOption}
           value="every"
-          name="radio-button"
+          name="seconds"
           inputProps={{ 'aria-label': 'A' }}
         />
         <spam>Cada {base}</spam> 
       </div>
       <div className="center">
         <Radio
-          checked={value === 'starting'}
-          onChange={handleChangeRadio}
+          checked={option === 'starting'}
+          onChange={handleChangeOption}
           value="starting"
-          name="radio-button"
-          inputProps={{ 'aria-label': 'A' }}
+          inputProps={{ 'aria-label': 'B' }}
         />
         <p>
           Cada
         </p>
         <SelectStyled
-          disabled={value !== 'starting'}
-          value={selectStart.value}
-          onChange={selectStart.onChange}
+          disabled={option !== 'starting'}
+          value={selectStart.one}
+          onChange={(event) => selectStart.onChange(event, 'one')}
           items={items.map((item, idx) => idx < (items.length - 1) && ({ value: idx + 1, tile: idx + 1 }))}
         />
         {base}(s) comenzando desde el {base}
         <SelectStyled
-          disabled={value !== 'starting'}
-          value={selectSecondValue.value}
-          onChange={selectSecondValue.onChange}
+          disabled={option !== 'starting'}
+          value={selectStart.two}
+          onChange={(event) => selectStart.onChange(event, 'two')}
           items={items}
         />
       </div>
       <div className="center">
       <Radio
-        checked={value === 'many'}
-        onChange={handleChangeRadio}
+        checked={option === 'many'}
+        onChange={handleChangeOption}
         value="many"
-        name="radio-button"
-        inputProps={{ 'aria-label': 'A' }}
+        inputProps={{ 'aria-label': 'C' }}
       />
         <p>{base}s especificos (elige uno o muchos)</p>
         <FormGroup className="grid">
-          {items.map(item => (
+          {items.map((item, idx) => (
             <FormControlLabel
-              control={<Checkbox disabled={value !== 'many'} onChange={handleChecked} name={item.tile} />}
               label={item.tile}
-              value={item.value}
+              key={idx}
+              control={<Checkbox
+                disabled={option !== 'many'}
+                checked={item.checked}
+                onChange={handleChecked}
+                value={item.value}
+                name={idx.toString()}
+              />}
             />
           ))}
         </FormGroup>
       </div>
       <div className="center">
         <Radio
-          checked={value === 'between'}
-          onChange={handleChangeRadio}
+          checked={option === 'between'}
+          onChange={handleChangeOption}
           value="between"
-          name="radio-button"
-          inputProps={{ 'aria-label': 'A' }}
+          inputProps={{ 'aria-label': 'D' }}
         />
         <p>
           Cada {base} entre el {base}
         </p>
         <SelectStyled
-          disabled={value !== 'between'}
-          value={selectOneValue.value}
-          onChange={selectOneValue.onChange}
+          disabled={option !== 'between'}
+          value={selectBetween.one}
+          onChange={(event) => selectBetween.onChange(event, 'one')}
           items={items}
         />
         y el {base}
         <SelectStyled
-          disabled={value !== 'between'}
-          value={selectSecondValue.value}
-          onChange={selectSecondValue.onChange}
+          disabled={option !== 'between'}
+          value={selectBetween.two}
+          onChange={(event) => selectBetween.onChange(event, 'two')}
           items={items}
         />
       </div>

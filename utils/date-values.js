@@ -10,7 +10,7 @@ export function getMonths() {
   const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
   const items = []
   months.forEach((month) => {
-    items.push({value: month, tile: month.charAt(0).toUpperCase() + month.slice(1)})
+    items.push({ value: month, tile: month.charAt(0).toUpperCase() + month.slice(1) })
   })
   return items
 }
@@ -25,4 +25,27 @@ export function getYears(maxYear = 2098) {
   }
 
   return years
+}
+
+export function addCheckedValue(stringValue, split, items) {
+  if (stringValue.includes(split)) {
+    const values = stringValue.split(split).map(str => isNaN(str) ? str : Number(str))
+    return items.map(item => ({ ...item, checked: values.includes(item.value) }))
+  }
+  return items.map(item => ({ ...item, checked: false }))
+}
+
+export function cronTabOption(stringValue) {
+  switch (true) {
+    case stringValue === '*':
+      return 'every'
+    case stringValue.includes('/'):
+      return 'starting'
+    case stringValue.includes(','):
+      return 'many'
+    case stringValue.includes('-'):
+      return 'between'
+    default:
+      return 'every'
+  }
 }

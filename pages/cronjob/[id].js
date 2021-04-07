@@ -1,21 +1,28 @@
 import { getCronJob } from 'services/cronjob'
-import createToken from 'services/createToken'
 import Wrapper from 'common/wrapper'
 import CronJobForm from 'components/home/cronjob-form'
+import { getToken } from 'utils/cookies'
+import { useState } from 'react'
 
 export async function getServerSideProps(ctx) {
-  const { access_token: token } = await createToken()
-  const cronjob  = await getCronJob(token, ctx.query.id)
-
-  return { props: { cronjob } }
-
+  const { user_token: token, ...payload } = await getToken(ctx)
+  const newToken = `${payload.token_type} ${payload.access_token}`
+  const data = await getCronJob(token || newToken, ctx.query.id)
+  
+  return {
+    props: {
+      cronjob: data,
+      token: newToken || null
+    }
+  }
 }
 
 export default function CronJob({ cronjob }) {
+  const [state, setState] = useState(cronjob)
   return (
     <Wrapper>
-      {/* <h1>CronJob</h1> */}
-      <CronJobForm cronjob={cronjob} />
+      <h2 style={{ marginTop: 0 }}>CronJob</h2>
+      <CronJobForm cronjob={state} setCronJob={setState} />
     </Wrapper>
   )
 }

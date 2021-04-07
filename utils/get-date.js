@@ -23,6 +23,6 @@ export default function getDate(date, type) {
       const f = Intl.DateTimeFormat('default', optionsString).format(new Date(date))
       return f.charAt(0).toUpperCase() + f.slice(1)
     default:
-      return Intl.DateTimeFormat('default', options).format(new Date(date))
+      return Intl.DateTimeFormat('default', optionsNumeric).format(new Date(date))
   }
 }
