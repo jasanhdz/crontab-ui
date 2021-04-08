@@ -1,5 +1,5 @@
 import 'isomorphic-fetch'
-import { BASE_API_URL } from 'config'
+import { BASE_API_URL } from 'constants/environment'
 
 export async function getAllWorkflows(token) {
   try {

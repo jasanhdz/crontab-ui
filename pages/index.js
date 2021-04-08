@@ -7,4 +7,6 @@ export function getServerSideProps(ctx) {
     ctx.res.writeHead(302, { Location: '/cronjob' })
     ctx.res.end()
   }
+
+  return { props: {} }
 }

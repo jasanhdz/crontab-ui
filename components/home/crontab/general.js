@@ -1,35 +1,10 @@
 import { Checkbox, FormControlLabel, FormGroup, Radio } from '@material-ui/core'
 import { useState } from 'react'
-import styled from 'styled-components'
+import { FormSecondStyled, SelectStyled } from './styles'
 import { addCheckedValue, cronTabOption } from 'utils/date-values'
-import Select from 'common/select'
 import useCronTabOption from 'hooks/use-crontab-option'
 import { getSplitValues } from 'utils/crontab'
-
-const SelectStyled = styled(Select)`
-  margin: 0 10px;
-  .MuiOutlinedInput-input {
-    padding-top: 10px;
-    padding-bottom: 10px;
-  }
-`
-
-const FormSecondStyled = styled.div`
-  .center {
-    padding: 5px 0;
-    display: flex;
-    align-items:center;
-    flex-wrap: wrap;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.35);
-  }
-  .grid {
-    width: 100%;
-    padding: 0 10px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    grid-column-gap: 20px;
-  }
-`
+import { OPTIONS } from 'constants/crontab'
 
 export default function FormSecond({ rawItems, base, name, values, handleValues }) {
   const [items, setItems] = useState(addCheckedValue(values, ',', rawItems))
@@ -45,14 +20,14 @@ export default function FormSecond({ rawItems, base, name, values, handleValues 
   const handleChangeOption = event => {
     setOption(event.target.value)
     switch (event.target.value) {
-      case 'every':
+      case OPTIONS.EVERY:
         return handleValues(name, '*')
-      case 'starting':
+      case OPTIONS.START:
         return handleValues(name, `${selectStart.one}/${selectStart.two}`)
-      case 'many':
+      case OPTIONS.MANY:
         const data = items.filter(item => item.checked).map(item => item.value)
         return handleValues(name, data.toString() || '*')
-      case 'between':
+      case OPTIONS.MANY:
         return handleValues(name, `*/${selectBetween.one}-${selectBetween.two}`)
       default:
         return handleValues(name, '*')

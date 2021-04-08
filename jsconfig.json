@@ -12,7 +12,8 @@
         "utils/*",
         "theme/*",
         "hooks/*",
-        "services/*"
+        "services/*",
+        "constants/*"
       ],
       "test/*": [
         "test/*"

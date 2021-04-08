@@ -1,5 +1,5 @@
 import 'isomorphic-fetch'
-import { SECRET, CLIENT_ID, BASE_API_URL } from 'config'
+import { SECRET, CLIENT_ID, BASE_API_URL } from 'constants/environment'
 
 async function createToken() {
   const res = await fetch(`${BASE_API_URL}/oauth/token`, {

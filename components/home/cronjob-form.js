@@ -1,22 +1,25 @@
 import styled from 'styled-components'
 import Tabs from 'common/tabs'
-import FormSecond from 'components/home/form-second'
+import CronTabGeneral from 'components/home/crontab/general'
+import CronTabDays from 'components/home/crontab/days'
 import { getTimeValues, getMonths, getYears } from 'utils/date-values'
 import getDate from 'utils/get-date'
 import { useState } from 'react'
 import MaterialTextField from '@material-ui/core/TextField'
 import { updateCronJob } from 'services/cronjob'
 import { getCookies } from 'utils/cookies'
+import * as constants from 'constants/crontab'
 
 const FormStyled = styled.form`
-  display: grid;
-  grid-row-gap: 1rem;
+  width: 100%;
   .cols-4 {
+    margin-bottom: 20px;
     display: grid;
-    grid-template-columns: 120px repeat(2, 1fr) 120px;
+    grid-template-columns: repeat(2, 100px) repeat(2, 1fr);
     grid-column-gap: 10px;
   }
   .cols-2 {
+    margin-bottom: 20px;
     display: grid;
     grid-template-columns: 120px 1fr;
     grid-column-gap: 10px;
@@ -25,17 +28,18 @@ const FormStyled = styled.form`
 
 function CronJobForm({ cronjob, setCronJob }) {
   const { id, name, description, created_at, updated_at, workflow_id, scheduling } = cronjob
-  const cronTab = scheduling.split(' ')
+  const cron = scheduling.split(' ')
   const [values, setValues] = useState({
     name,
     description,
     workflow_id,
-    seconds: cronTab[0] || '*',
-    minutes: cronTab[1] || '*',
-    hours:   cronTab[2] || '*',
-    days:    cronTab[3] || '*',
-    months:  cronTab[4] || '*',
-    years:   cronTab[5] || '2021,2022'
+    seconds:    cron[0] || '*',
+    minutes:    cron[1] || '*',
+    hours:      cron[2] || '*',
+    dayOfMonth: '?',
+    month:      cron[4] || '*',
+    dayOfWeek:  '*',
+    year:       cron[6] || '*'
   })
   const handleChange = event => {
     setValues({...values, [event.target.name]: event.target.value })
@@ -45,11 +49,13 @@ function CronJobForm({ cronjob, setCronJob }) {
   }
   const handleSubmit = async event => {
     event.preventDefault()
-    const { seconds, minutes, hours, days, months, years, ...otherProps } = values
-    const crontab = `${seconds} ${minutes} ${hours} ${days} ${months} ${years}`
-    const { user_token: token } = getCookies()
-    const { payload: data } = await updateCronJob(token, id, {...otherProps, scheduling: crontab })
-    setCronJob({ ...data })
+    const { name, description, workflow_id, ...otherProps } = values
+    const crontab = Object.values(otherProps).reduce((accum, current) => `${accum} ${current}`)
+    console.log(crontab)
+    // const { user_token: token } = getCookies()
+    // const { payload } = await updateCronJob(token, id, {...otherProps, scheduling: crontab })
+    // console.log(payload)
+    // setCronJob({ ...payload })
   }
   return (
     <FormStyled onSubmit={handleSubmit} >
@@ -58,6 +64,12 @@ function CronJobForm({ cronjob, setCronJob }) {
           label="ID"
           value={id}
           disabled
+        />
+        <MaterialTextField
+          label="Workflow id"
+          value={values.workflow_id}
+          onChange={handleChange}
+          name="workflow_id"
         />
         <MaterialTextField
           label="creado en"
@@ -69,12 +81,6 @@ function CronJobForm({ cronjob, setCronJob }) {
           value={getDate(updated_at)}
           disabled
           style={{ transition: 500 }}
-        />
-        <MaterialTextField
-          label="Workflow id"
-          value={values.workflow_id}
-          onChange={handleChange}
-          name="workflow_id"
         />
       </div>
       <div className="cols-2">
@@ -96,8 +102,8 @@ function CronJobForm({ cronjob, setCronJob }) {
         <Tabs options={[
           {
             title: 'Segundos',
-            component: <FormSecond
-              name="seconds"
+            component: <CronTabGeneral
+              name={constants.SECONDS}
               base="segundo"
               rawItems={getTimeValues(0, 59)}
               values={values.seconds}
@@ -106,8 +112,8 @@ function CronJobForm({ cronjob, setCronJob }) {
           },
           {
             title: 'Minutos',
-            component: <FormSecond
-              name='minutes'
+            component: <CronTabGeneral
+              name={constants.MINUTES}
               base="minuto"
               rawItems={getTimeValues(0, 59)}
               values={values.minutes}
@@ -116,8 +122,8 @@ function CronJobForm({ cronjob, setCronJob }) {
           },
           {
             title: 'Horas',
-            component: <FormSecond
-              name='hours'
+            component: <CronTabGeneral
+              name={constants.HOURS}
               base="hora"
               rawItems={getTimeValues(0, 23)}
               values={values.hours}
@@ -126,25 +132,29 @@ function CronJobForm({ cronjob, setCronJob }) {
           },
           {
             title: 'Dias',
-            component: <p>Dias</p>
+            component: <CronTabDays
+              dayOfMonth={values.dayOfMonth}
+              dayOfWeek={values.dayOfWeek}
+              handleValues={handleValues}
+            />
           },
           {
             title: 'Meses',
-            component: <FormSecond
-              name='months'
+            component: <CronTabGeneral
+              name={constants.MONTH}
               base="mes"
               rawItems={getMonths()}
-              values={values.months}
+              values={values.month}
               handleValues={handleValues}
             />
           },
           {
             title: 'Años',
-            component: <FormSecond
-              name='years'
+            component: <CronTabGeneral
+              name={constants.YEAR}
               base="año"
               rawItems={getYears()}
-              values={values.years}
+              values={values.year}
               handleValues={handleValues}
             />
           }

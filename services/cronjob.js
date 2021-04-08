@@ -1,5 +1,5 @@
 import 'isomorphic-fetch'
-import { BASE_API_URL } from 'config'
+import { BASE_API_URL } from 'constants/environment'
 
 export async function getAllCronJobs(token) {
   try {
@@ -43,11 +43,11 @@ export async function updateCronJob(token, id, payload) {
   try {
     const res = await fetch(`${BASE_API_URL}/api/cronjob/${id}`, {
       method: 'PUT',
-      headers: { Accept: 'application/json', Authorization: token },
-      body: payload
+      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+      Authorization: token,
+      body: JSON.stringify(payload)
     })
     const data = await res.json()
-    console.log(data)
     return data
   } catch ({ message }) {
     console.log(message)

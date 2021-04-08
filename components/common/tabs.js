@@ -3,6 +3,8 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { Box } from '@material-ui/core';
 import { useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -11,12 +13,12 @@ function TabPanel(props) {
     <div
       role="tabpanel"
       hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
+      id={`scrollable-auto-tabpanel-${index}`}
+      aria-labelledby={`scrollable-auto-tab-${index}`}
       {...other}
     >
       {value === index && (
-        <Box p={3}>
+        <Box p={0}>
           <div>{children}</div>
         </Box>
       )}
@@ -26,25 +28,37 @@ function TabPanel(props) {
 
 function a11yProps(index) {
   return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  };
+    id: `scrollable-force-tab-${index}`,
+    'aria-controls': `scrollable-force-tabpanel-${index}`,
+  }
 }
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+    width: '100%',
+    backgroundColor: theme.palette.background.paper,
+  },
+}))
+
 export default function Tabbs({ options }) {
+  const matches = useMediaQuery('(min-width:900px)');
+  const clasess = useStyles()
   const [value, setValue] = useState(0)
   const handleChange = (event, newValue) => {
     setValue(newValue)
   }
   return (
-    <div>
+    <div className={clasess.root}>
       <AppBar position="static" color="default">
         <Tabs
-          indicatorColor="primary"
-          textColor="primary"
-          variant="fullWidth"
           value={value}
           onChange={handleChange}
+          variant={matches ? 'fullWidth' : 'scrollable'}
+          scrollButtons="on"
+          indicatorColor="primary"
+          textColor="primary"
+          aria-label="scrollable force tabs example"
         >
           {options.map((item, idx) => <Tab key={idx} label={item.title} {...a11yProps(idx)} /> )}
         </Tabs>

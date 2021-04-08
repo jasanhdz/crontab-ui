@@ -6,6 +6,20 @@ export function getTimeValues(min, max) {
   return items
 }
 
+export function getDaysOfTheMonth() {
+  return getTimeValues(1, 31).map(({ tile, value }) => {
+    if(value === 1 || value === 21 || value === 31) return { value, tile: `${tile}st`}
+    if(value === 2 || value === 22) return {value, tile: `${tile}nd`}
+    if(value === 3 || value === 23) return {value, tile: `${tile}rd`}
+    return { value, tile: `${tile}th`}
+  })
+}
+
+export function getDays() {
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+  return days.map(day => ({ value: day, tile: day }))
+}
+
 export function getMonths() {
   const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
   const items = []
