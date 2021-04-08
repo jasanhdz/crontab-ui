@@ -9,7 +9,7 @@ export default function useCronTabDays(initialState) {
   const [state, setState] = useState(initialState)
   const onChange = event => {
     const value = event.target.value
-    state.currentDays = value
+    state.current = value
     switch (value) {
       case OPTION.EVERY_WEEKDAY:
         state[OF_WEEKDAY].value = state[OF_WEEKDAY][OPTION.EVERY_WEEKDAY]

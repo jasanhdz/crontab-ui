@@ -1,80 +1,60 @@
 import { Checkbox, FormControlLabel, FormGroup, Radio } from '@material-ui/core'
-import { useState } from 'react'
 import { FormSecondStyled, SelectStyled } from './styles'
-import { addCheckedValue, cronTabOption } from 'utils/date-values'
-import useCronTabOption from 'hooks/use-crontab-option'
-import { getSplitValues } from 'utils/crontab'
+import useCronTab from 'hooks/use-crontab'
+import PropTypes from 'prop-types'
 import { OPTIONS } from 'constants/crontab'
 
-export default function FormSecond({ rawItems, base, name, values, handleValues }) {
-  const [items, setItems] = useState(addCheckedValue(values, ',', rawItems))
-  const handleChecked = (event) => {
-    items[event.target.name].checked = event.target.checked
-    setItems([...items])
-    const data = items.filter(item => item.checked).map(item => item.value)
-    handleValues(name, data.toString() || '*')
-  }
-  const selectStart = useCronTabOption(getSplitValues(values, '/', items, true), name, handleValues, true)
-  const selectBetween = useCronTabOption(getSplitValues(values, '-', items), name, handleValues)
-  const [option, setOption] = useState(cronTabOption(values))
-  const handleChangeOption = event => {
-    setOption(event.target.value)
-    switch (event.target.value) {
-      case OPTIONS.EVERY:
-        return handleValues(name, '*')
-      case OPTIONS.START:
-        return handleValues(name, `${selectStart.one}/${selectStart.two}`)
-      case OPTIONS.MANY:
-        const data = items.filter(item => item.checked).map(item => item.value)
-        return handleValues(name, data.toString() || '*')
-      case OPTIONS.MANY:
-        return handleValues(name, `*/${selectBetween.one}-${selectBetween.two}`)
-      default:
-        return handleValues(name, '*')
-    }
-  }
+export default function FormSecond({ initialState, base, values }) {
+  const {
+    state,
+    items,
+    handleOption,
+    handleChangeStart,
+    handleChangeItems,
+    handleChangeBetween
+  } = useCronTab(initialState, values)
+  
   return (
     <FormSecondStyled>
       <div className="center">
         <Radio
-          checked={option === 'every'}
-          onChange={handleChangeOption}
-          value="every"
+          checked={state.current === OPTIONS.EVERY}
+          onChange={handleOption}
+          value={OPTIONS.EVERY}
           name="seconds"
-          inputProps={{ 'aria-label': 'A' }}
         />
         <spam>Cada {base}</spam> 
       </div>
       <div className="center">
         <Radio
-          checked={option === 'starting'}
-          onChange={handleChangeOption}
-          value="starting"
-          inputProps={{ 'aria-label': 'B' }}
+          checked={state.current === OPTIONS.START}
+          onChange={handleOption}
+          value={OPTIONS.START}
         />
         <p>
           Cada
         </p>
         <SelectStyled
-          disabled={option !== 'starting'}
-          value={selectStart.one}
-          onChange={(event) => selectStart.onChange(event, 'one')}
-          items={items.map((item, idx) => idx < (items.length - 1) && ({ value: idx + 1, tile: idx + 1 }))}
+          disabled={state.current !== OPTIONS.START}
+          value={state.START.split('/')[1] || 1}
+          onChange={handleChangeStart}
+          name="one"
+          items={items}
         />
         {base}(s) comenzando desde el {base}
         <SelectStyled
-          disabled={option !== 'starting'}
-          value={selectStart.two}
-          onChange={(event) => selectStart.onChange(event, 'two')}
+          disabled={state.current !== OPTIONS.START}
+          value={state.START.split('/')[0] || 2}
+          onChange={handleChangeStart}
           items={items}
+          name="two"
         />
       </div>
       <div className="center">
       <Radio
-        checked={option === 'many'}
-        onChange={handleChangeOption}
-        value="many"
-        inputProps={{ 'aria-label': 'C' }}
+        checked={state.current === OPTIONS.MANY}
+        onChange={handleOption}
+        value={OPTIONS.MANY}
       />
         <p>{base}s especificos (elige uno o muchos)</p>
         <FormGroup className="grid">
@@ -83,9 +63,9 @@ export default function FormSecond({ rawItems, base, name, values, handleValues 
               label={item.tile}
               key={idx}
               control={<Checkbox
-                disabled={option !== 'many'}
+                disabled={state.current !== OPTIONS.MANY}
                 checked={item.checked}
-                onChange={handleChecked}
+                onChange={handleChangeItems}
                 value={item.value}
                 name={idx.toString()}
               />}
@@ -95,28 +75,41 @@ export default function FormSecond({ rawItems, base, name, values, handleValues 
       </div>
       <div className="center">
         <Radio
-          checked={option === 'between'}
-          onChange={handleChangeOption}
-          value="between"
-          inputProps={{ 'aria-label': 'D' }}
+          checked={state.current === OPTIONS.BETWEEN}
+          onChange={handleOption}
+          value={OPTIONS.BETWEEN}
         />
         <p>
           Cada {base} entre el {base}
         </p>
         <SelectStyled
-          disabled={option !== 'between'}
-          value={selectBetween.one}
-          onChange={(event) => selectBetween.onChange(event, 'one')}
+          disabled={state.current !== OPTIONS.BETWEEN}
+          value={state.BETWEEN.split('-')[0] || 0}
+          onChange={handleChangeBetween}
+          name="one"
           items={items}
         />
         y el {base}
         <SelectStyled
-          disabled={option !== 'between'}
-          value={selectBetween.two}
-          onChange={(event) => selectBetween.onChange(event, 'two')}
+          disabled={state.current !== OPTIONS.BETWEEN}
+          value={state.BETWEEN.split('-')[1] || 0}
+          onChange={handleChangeBetween}
+          name="two"
           items={items}
         />
       </div>
     </FormSecondStyled>
   )
+}
+
+FormSecond.Proptypes = {
+  initialState: PropTypes.shape({
+    current: PropTypes.string.isRequired,
+    value: PropTypes.string.isRequired,
+    EVERY: PropTypes.string.isRequired,
+    START: PropTypes.string.isRequired,
+    MANY: PropTypes.string.isRequired,
+    BETWEEN: PropTypes.string.isRequired
+  }).isRequired,
+  base: PropTypes.isRequired
 }

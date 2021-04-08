@@ -1,8 +1,8 @@
 export const OPTIONS = {
-  EVERY:   'every',
-  START:   'start',
-  MANY:    'many',
-  BETWEEN: 'between'
+  EVERY:   'EVERT',
+  START:   'START',
+  MANY:    'MANY',
+  BETWEEN: 'BETWEEN'
 }
 
 export const OPTION_DAY_KEYS = {
