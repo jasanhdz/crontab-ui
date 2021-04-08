@@ -10,6 +10,7 @@ const alias = {
   hooks:      `${root}/hooks`,
   services:   `${root}/services`,
   constants:  `${root}/constants`,
+  providers:  `${root}/providers`,
   root
 }
 

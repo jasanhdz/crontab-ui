@@ -4,12 +4,12 @@ import CronTabGeneral from 'components/home/crontab/general'
 import CronTabDays from 'components/home/crontab/days'
 import { getTimeValues, getMonths, getYears, addCheckedValue } from 'utils/date-values'
 import getDate from 'utils/get-date'
-import { useState } from 'react'
 import MaterialTextField from '@material-ui/core/TextField'
 import { updateCronJob } from 'services/cronjob'
 import { getCookies } from 'utils/cookies'
-import { OPTION_DAY, OPTIONS } from 'constants/crontab'
 import { useFormik } from 'formik'
+import cronJobState from 'providers/cronjob-state'
+import { OPTION_DAY, OPTIONS } from 'constants/crontab'
 
 const FormStyled = styled.form`
   width: 100%;
@@ -28,8 +28,7 @@ const FormStyled = styled.form`
 `
 
 function CronJobForm({ cronjob, setCronJob }) {
-  const { id, name, description, created_at, updated_at, workflow_id, scheduling } = cronjob
-  const cron = scheduling.split(' ')
+  const { id, created_at, updated_at,  name, description, workflow_id, scheduling } = cronjob
   const { handleChange, handleSubmit, values } = useFormik({
     initialValues: {
       name,
@@ -97,9 +96,17 @@ function CronJobForm({ cronjob, setCronJob }) {
       }
     },
     onSubmit: values => {
-      console.log('OF_MONTH: ', values.days.OF_MONTH.value)
-      console.log('OF_WEEKDAY: ', values.days.OF_WEEKDAY.value)
-      console.log('SECONDS: ', values.seconds.value)
+      const { seconds, minutes, hours, days, month, year } = values
+      // console.log('SECONDS: ', values.seconds.value)
+      // console.log('MINUTES: ', values.minutes.value)
+      // console.log('HOURS: ', values.hours.value)
+      // console.log('OF_MONTH: ', values.days.OF_MONTH.value)
+      // console.log('MONTH: ', values.month.value)
+      // console.log('OF_WEEKDAY: ', values.days.OF_WEEKDAY.value)
+      // console.log('YEAR: ', values.year.value)
+
+      const scheduling = `${seconds.value} ${minutes.value} ${hours.value} ${days.OF_MONTH.value} ${month.value} ${days.OF_WEEKDAY.value} ${year.value}`
+      console.log(scheduling)
     }
   })
   return (

@@ -36,7 +36,7 @@ export default function FormSecond({ initialState, base, values }) {
         </p>
         <SelectStyled
           disabled={state.current !== OPTIONS.START}
-          value={state.START.split('/')[1] || 1}
+          value={state.START.split('/')[1] || items[0].value}
           onChange={handleChangeStart}
           name="one"
           items={items}

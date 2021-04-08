@@ -2,8 +2,7 @@ import { Checkbox, FormControlLabel, FormGroup, Radio } from '@material-ui/core'
 import { FormSecondStyled, SelectStyled } from './styles'
 import { getDays, days, getDaysOfTheMonth, getTimeValues } from 'utils/date-values'
 import useCronTabDays from 'hooks/use-crontab-days'
-import { OPTION_DAY_KEYS, OPTION_DAY_ALL as OPTION } from 'constants/crontab'
-const { OF_MONTH, OF_WEEKDAY } = OPTION_DAY_KEYS
+import { OPTION_DAY_ALL as OPTION } from 'constants/crontab'
 
 export default function CronTabDays({ option }) {
   const {
@@ -41,7 +40,7 @@ export default function CronTabDays({ option }) {
           disabled={state.current !== OPTION.STARTING_WEEKDAY}
           items={getTimeValues(1, 7)}
           onChange={handleChangeStartWeek}
-          value={state[OF_WEEKDAY][OPTION.STARTING_WEEKDAY].split('/')[1] || 1}
+          value={state.OF_WEEKDAY.STARTING_WEEKDAY.split('/')[1] || 1}
           name="one"
         />
         Dia(s) a partir del 
@@ -49,7 +48,7 @@ export default function CronTabDays({ option }) {
           disabled={state.current !== OPTION.STARTING_WEEKDAY}
           items={getDays()}
           onChange={handleChangeStartWeek}
-          value={days[state[OF_WEEKDAY][OPTION.STARTING_WEEKDAY].split('/')[0] - 1] || 'Sunday'}
+          value={days[state.OF_WEEKDAY.STARTING_WEEKDAY.split('/')[0] - 1] || 'Sunday'}
           name="two"
         /> del mes
       </div>
@@ -63,7 +62,7 @@ export default function CronTabDays({ option }) {
         <SelectStyled
           disabled={state.current !== OPTION.STARTING_MONTH}
           items={getTimeValues(1, 31)}
-          value={state[OF_MONTH][OPTION.STARTING_MONTH].split('/')[1] || 1}
+          value={state.OF_MONTH.STARTING_MONTH.split('/')[1] || 1}
           onChange={handleChangeStartMonth}
           name="one"
         />
@@ -71,7 +70,7 @@ export default function CronTabDays({ option }) {
         <SelectStyled
           disabled={state.current !== OPTION.STARTING_MONTH}
           items={getDaysOfTheMonth()}
-          value={state[OF_MONTH][OPTION.STARTING_MONTH].split('/')[0] || getDaysOfTheMonth()[0].value}
+          value={state.OF_MONTH.STARTING_MONTH.split('/')[0] || getDaysOfTheMonth()[0].value}
           onChange={handleChangeStartMonth}
           name="two"
         /> 
@@ -148,7 +147,7 @@ export default function CronTabDays({ option }) {
         El último día 
         <SelectStyled
           disabled={state.current !== OPTION.LAST_WEEKDAY_OF_MONTH}
-          value={days[state[OF_WEEKDAY][OPTION.LAST_WEEKDAY_OF_MONTH].split('L')[0] - 1] || days[1]}
+          value={days[state.OF_WEEKDAY.LAST_WEEKDAY_OF_MONTH.split('L')[0] - 1] || days[1]}
           onChange={handleChangeLastWeekdayOfMonth}
           items={getDays()}
         />
@@ -164,7 +163,7 @@ export default function CronTabDays({ option }) {
           disabled={state.current !== OPTION.DAYS_BEFORE_THE_END_OF_MONTH}
           items={getTimeValues(1, 31)}
           onChange={handleChangeDaysBeforeTheEndOfMonth}
-          value={state[OF_MONTH][OPTION.DAYS_BEFORE_THE_END_OF_MONTH].split('-')[1] || 1}
+          value={state.OF_MONTH.DAYS_BEFORE_THE_END_OF_MONTH.split('-')[1] || 1}
         />
         dia(s) antes del fin del mes
       </div>
@@ -177,7 +176,7 @@ export default function CronTabDays({ option }) {
         Dia de la semana (Lunes a Viernes) más cercano al
         <SelectStyled
           disabled={state.current !== OPTION.MONFRI_CLOSEST_TO_DAY_OF_THE_MONTH}
-          value={state[OF_MONTH][OPTION.MONFRI_CLOSEST_TO_DAY_OF_THE_MONTH].split('W')[0] || 1}
+          value={state.OF_MONTH.MONFRI_CLOSEST_TO_DAY_OF_THE_MONTH.split('W')[0] || 1}
           onChange={handleChangeMonFriClosestToDay}
           items={getDaysOfTheMonth()}
         />
@@ -191,7 +190,7 @@ export default function CronTabDays({ option }) {
         /> En el 
         <SelectStyled
           disabled={state.current !== OPTION.NUMBER_X_WEEKDAY_OF_MONTH}
-          value={state[OF_WEEKDAY][OPTION.NUMBER_X_WEEKDAY_OF_MONTH].split('#')[1] || 1}
+          value={state.OF_WEEKDAY.NUMBER_X_WEEKDAY_OF_MONTH.split('#')[1] || 1}
           items={getDaysOfTheMonth().slice(0, 5)}
           onChange={handleChangeNumberXWeekdayOfMonth}
           name="one"
@@ -199,7 +198,7 @@ export default function CronTabDays({ option }) {
         <SelectStyled
           disabled={state.current !== OPTION.NUMBER_X_WEEKDAY_OF_MONTH}
           items={getDays()}
-          value={days[state[OF_WEEKDAY][OPTION.NUMBER_X_WEEKDAY_OF_MONTH].split('#')[0] - 1] || days[1]}
+          value={days[state.OF_WEEKDAY.NUMBER_X_WEEKDAY_OF_MONTH.split('#')[0] - 1] || days[1]}
           onChange={handleChangeNumberXWeekdayOfMonth}
           name="two"
         />
