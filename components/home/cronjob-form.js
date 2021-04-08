@@ -9,6 +9,8 @@ import MaterialTextField from '@material-ui/core/TextField'
 import { updateCronJob } from 'services/cronjob'
 import { getCookies } from 'utils/cookies'
 import * as constants from 'constants/crontab'
+import { OPTION_DAY } from 'constants/crontab'
+import { useFormik } from 'formik'
 
 const FormStyled = styled.form`
   width: 100%;
@@ -29,34 +31,37 @@ const FormStyled = styled.form`
 function CronJobForm({ cronjob, setCronJob }) {
   const { id, name, description, created_at, updated_at, workflow_id, scheduling } = cronjob
   const cron = scheduling.split(' ')
-  const [values, setValues] = useState({
-    name,
-    description,
-    workflow_id,
-    seconds:    cron[0] || '*',
-    minutes:    cron[1] || '*',
-    hours:      cron[2] || '*',
-    dayOfMonth: '?',
-    month:      cron[4] || '*',
-    dayOfWeek:  '*',
-    year:       cron[6] || '*'
+  const { handleChange, handleSubmit, values } = useFormik({
+    initialValues: {
+      name,
+      description,
+      workflow_id,
+      option: {
+        currentDays: OPTION_DAY.OF_WEEKDAY.EVERY_WEEKDAY,
+        OF_MONTH: {
+          value: '?',
+          [OPTION_DAY.OF_MONTH.STARTING_MONTH]: '31/14',
+          [OPTION_DAY.OF_MONTH.MANY_MONTH]: '2,14',
+          [OPTION_DAY.OF_MONTH.LAST_DAY_OF_MONTH]: 'L',
+          [OPTION_DAY.OF_MONTH.LAST_WORKING_DAY_OF_EVERY_MONTH]: 'LW',
+          [OPTION_DAY.OF_MONTH.DAYS_BEFORE_THE_END_OF_MONTH]: 'L-1',
+          [OPTION_DAY.OF_MONTH.MONFRI_CLOSEST_TO_DAY_OF_THE_MONTH]: '20W',
+        },
+        OF_WEEKDAY: {
+          value: '*',
+          [OPTION_DAY.OF_WEEKDAY.LAST_WEEKDAY_OF_MONTH]: '4L',
+          [OPTION_DAY.OF_WEEKDAY.EVERY_WEEKDAY]: '*',
+          [OPTION_DAY.OF_WEEKDAY.STARTING_WEEKDAY]: '6/3',
+          [OPTION_DAY.OF_WEEKDAY.MANY_WEEKDAY]: 'SUN,MON,TUE,WED,THU,FRI,SAT',
+          [OPTION_DAY.OF_WEEKDAY.NUMBER_X_WEEKDAY_OF_MONTH]: '7#5',
+        }
+      },
+    },
+    onSubmit: values => {
+      console.log('current: ', values.option.currentDays)
+      console.log(values.option.OF_MONTH.value, values.option.OF_WEEKDAY.value)
+    }
   })
-  const handleChange = event => {
-    setValues({...values, [event.target.name]: event.target.value })
-  }
-  const handleValues = (name, value) => {
-    setValues({ ...values, [name]: value })
-  }
-  const handleSubmit = async event => {
-    event.preventDefault()
-    const { name, description, workflow_id, ...otherProps } = values
-    const crontab = Object.values(otherProps).reduce((accum, current) => `${accum} ${current}`)
-    console.log(crontab)
-    // const { user_token: token } = getCookies()
-    // const { payload } = await updateCronJob(token, id, {...otherProps, scheduling: crontab })
-    // console.log(payload)
-    // setCronJob({ ...payload })
-  }
   return (
     <FormStyled onSubmit={handleSubmit} >
       <div className="cols-4">
@@ -100,64 +105,65 @@ function CronJobForm({ cronjob, setCronJob }) {
       <div>
         <p>Elige la periocidad</p>
         <Tabs options={[
-          {
-            title: 'Segundos',
-            component: <CronTabGeneral
-              name={constants.SECONDS}
-              base="segundo"
-              rawItems={getTimeValues(0, 59)}
-              values={values.seconds}
-              handleValues={handleValues}
-            />
-          },
-          {
-            title: 'Minutos',
-            component: <CronTabGeneral
-              name={constants.MINUTES}
-              base="minuto"
-              rawItems={getTimeValues(0, 59)}
-              values={values.minutes}
-              handleValues={handleValues}
-            />
-          },
-          {
-            title: 'Horas',
-            component: <CronTabGeneral
-              name={constants.HOURS}
-              base="hora"
-              rawItems={getTimeValues(0, 23)}
-              values={values.hours}
-              handleValues={handleValues}
-            />
-          },
+          // {
+          //   title: 'Segundos',
+          //   component: <CronTabGeneral
+          //     name={constants.SECONDS}
+          //     base="segundo"
+          //     rawItems={getTimeValues(0, 59)}
+          //     values={values.seconds}
+          //     handleValues={handleValues}
+          //   />
+          // },
+          // {
+          //   title: 'Minutos',
+          //   component: <CronTabGeneral
+          //     name={constants.MINUTES}
+          //     base="minuto"
+          //     rawItems={getTimeValues(0, 59)}
+          //     values={values.minutes}
+          //     handleValues={handleValues}
+          //   />
+          // },
+          // {
+          //   title: 'Horas',
+          //   component: <CronTabGeneral
+          //     name={constants.HOURS}
+          //     base="hora"
+          //     rawItems={getTimeValues(0, 23)}
+          //     values={values.hours}
+          //     handleValues={handleValues}
+          //   />
+          // },
           {
             title: 'Dias',
             component: <CronTabDays
-              dayOfMonth={values.dayOfMonth}
-              dayOfWeek={values.dayOfWeek}
-              handleValues={handleValues}
+              option={values.option}
+              handleChange={handleChange}
+              scheduling={values.scheduling}
+              // handleValues={handleValues}
             />
           },
-          {
-            title: 'Meses',
-            component: <CronTabGeneral
-              name={constants.MONTH}
-              base="mes"
-              rawItems={getMonths()}
-              values={values.month}
-              handleValues={handleValues}
-            />
-          },
-          {
-            title: 'Años',
-            component: <CronTabGeneral
-              name={constants.YEAR}
-              base="año"
-              rawItems={getYears()}
-              values={values.year}
-              handleValues={handleValues}
-            />
-          }
+          // {
+          //   title: 'Meses',
+          //   component: <CronTabGeneral
+          //     name={constants.MONTH}
+          //     base="mes"
+          //     rawItems={getMonths()}
+          //     values={values.month}
+          //     handleValues={handleValues}
+          //   />
+          // },
+          // {
+          //   title: 'Años',
+          //   component: <CronTabGeneral
+          //     name={constants.YEAR}
+          //     base="año"
+          //     rawItems={getYears()}
+          //     values={values.year}
+          //     handleValues={handleValues}
+          //   />
+          // }
         ]} />
       </div>
       <button type="submit">Enviar</button>

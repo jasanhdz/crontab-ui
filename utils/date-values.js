@@ -1,3 +1,5 @@
+export const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+
 export function getTimeValues(min, max) {
   const items = []
   for (let i = min; i <= max; i++) {
@@ -16,7 +18,6 @@ export function getDaysOfTheMonth() {
 }
 
 export function getDays() {
-  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
   return days.map(day => ({ value: day, tile: day }))
 }
 

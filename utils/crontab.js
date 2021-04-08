@@ -9,9 +9,11 @@ export function getSplitValues(values, split, items, type = false) {
   return { one: items[0].value, two: items[1].value }
 }
 
-function containts(target, pattern) {
+function containts(target = '', pattern) {
   let value = 0
-  pattern.forEach(word => value = value + target.includes(word))
+  pattern.forEach(word => {
+    value = value + target.includes(word)
+  })
   return (value === 1)
 }
 
