@@ -51,7 +51,7 @@ export function cronTabOption(stringValue) {
       return OPTIONS.EVERY
     case stringValue.includes('/'):
       return OPTIONS.START
-    case /^[0-9]*$/.test(stringValue) || stringValue.includes(',') || containts(strWeekday, ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']):
+    case stringValue.includes(','):
       return OPTIONS.MANY
     case stringValue.includes('-'):
       return OPTIONS.BETWEEN

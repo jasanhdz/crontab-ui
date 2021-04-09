@@ -22,7 +22,7 @@ export default function FormSecond({ cronState, base, values }) {
           value={OPTIONS.EVERY}
           name="seconds"
         />
-        <spam>Cada {base}</spam> 
+        <span>Cada {base}</span> 
       </div>
       <div className="center">
         <Radio
@@ -39,6 +39,7 @@ export default function FormSecond({ cronState, base, values }) {
           onChange={handleChangeStart}
           name="one"
           items={items}
+          required
         />
         {base}(s) comenzando desde el {base}
         <SelectStyled
@@ -47,6 +48,7 @@ export default function FormSecond({ cronState, base, values }) {
           onChange={handleChangeStart}
           items={items}
           name="two"
+          required
         />
       </div>
       <div className="center">
@@ -87,6 +89,7 @@ export default function FormSecond({ cronState, base, values }) {
           onChange={handleChangeBetween}
           name="one"
           items={items}
+          required
         />
         y el {base}
         <SelectStyled
@@ -95,14 +98,15 @@ export default function FormSecond({ cronState, base, values }) {
           onChange={handleChangeBetween}
           name="two"
           items={items}
+          required
         />
       </div>
     </FormSecondStyled>
   )
 }
 
-FormSecond.Proptypes = {
-  initialState: PropTypes.shape({
+FormSecond.propTypes = {
+  cronState: PropTypes.shape({
     current: PropTypes.string.isRequired,
     value: PropTypes.string.isRequired,
     EVERY: PropTypes.string.isRequired,
@@ -110,5 +114,6 @@ FormSecond.Proptypes = {
     MANY: PropTypes.string.isRequired,
     BETWEEN: PropTypes.string.isRequired
   }).isRequired,
-  base: PropTypes.isRequired
+  base: PropTypes.string.isRequired,
+  values: PropTypes.array.isRequired
 }

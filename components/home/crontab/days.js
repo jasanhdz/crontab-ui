@@ -27,7 +27,7 @@ export default function CronTabDays({ option }) {
           onChange={onChange}
           value={OPTION.EVERY_WEEKDAY}
         />
-        <spam>Cada Dia</spam> 
+        <span>Cada Dia</span> 
       </div>
       <div className="center">
         <Radio

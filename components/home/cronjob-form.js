@@ -31,10 +31,20 @@ function CronJobForm({ cronjob, setCronJob }) {
   const { id, created_at, updated_at, } = cronjob
   const { handleChange, handleSubmit, values } = useFormik({
     initialValues: cronJobState(cronjob),
-    onSubmit: values => {
-      const { seconds, minutes, hours, days, month, year } = values
-      const scheduling = `${seconds.value} ${minutes.value} ${hours.value} ${days.OF_MONTH.value} ${month.value} ${days.OF_WEEKDAY.value} ${year.value}`
+    onSubmit: async values => {
+      const { seconds, minutes, hours, days, month, year, name, description, workflow_id } = values
+      const scheduling = `${seconds.value || '*'} ${minutes.value || '*'} ${hours.value || '*'} ${days.OF_MONTH.value || '?'} ${month.value} ${days.OF_WEEKDAY.value || '*'} ${year.value || '*'}`
       console.log(scheduling)
+      const { user_token: token } = getCookies()
+      const data = {
+        name,
+        description,
+        workflow_id,
+        scheduling
+      }
+      const { payload } = await updateCronJob(token, id, data)
+      console.log(payload)
+      setCronJob({ ...payload })
     }
   })
   return (
@@ -84,7 +94,7 @@ function CronJobForm({ cronjob, setCronJob }) {
             title: 'Segundos',
             component: <CronTabGeneral
               cronState={values.seconds}
-              values={addCheckedValue(values.seconds.MANY, ',', getTimeValues(0, 59))}
+              values={addCheckedValue(values.seconds.value, ',', getTimeValues(0, 59))}
               base="segundo"
             />
           },
@@ -92,7 +102,7 @@ function CronJobForm({ cronjob, setCronJob }) {
             title: 'Minutos',
             component: <CronTabGeneral
               cronState={values.minutes}
-              values={addCheckedValue(values.minutes.MANY, ',', getTimeValues(0, 59))}
+              values={addCheckedValue(values.minutes.value, ',', getTimeValues(0, 59))}
               base="minuto"
             />
           },
@@ -100,7 +110,7 @@ function CronJobForm({ cronjob, setCronJob }) {
             title: 'Horas',
             component: <CronTabGeneral
               cronState={values.hours}
-              values={addCheckedValue(values.hours.MANY, ',', getTimeValues(0, 23))}
+              values={addCheckedValue(values.hours.value, ',', getTimeValues(0, 23))}
               base="hora"
             />
           },
@@ -112,7 +122,7 @@ function CronJobForm({ cronjob, setCronJob }) {
             title: 'Meses',
             component: <CronTabGeneral
               cronState={values.month}
-              values={addCheckedValue(values.month.MANY, ',', MONTHS)}
+              values={addCheckedValue(values.month.value, ',', MONTHS)}
               base="Mes"
             />
           },
@@ -120,7 +130,7 @@ function CronJobForm({ cronjob, setCronJob }) {
             title: 'Años',
             component: <CronTabGeneral
               cronState={values.year}
-              values={addCheckedValue(values.year.MANY, ',', getYears())}
+              values={addCheckedValue(values.year.value, ',', getYears())}
               base="Año"
             />
           }
