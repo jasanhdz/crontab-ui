@@ -2,13 +2,14 @@ import styled from 'styled-components'
 import Tabs from 'common/tabs'
 import CronTabGeneral from 'components/home/crontab/general'
 import CronTabDays from 'components/home/crontab/days'
-import { getTimeValues, getMonths, getYears } from 'utils/date-values'
+import { getTimeValues, MONTHS, getYears } from 'utils/date-values'
+import { addCheckedValue } from 'utils/crontab'
 import getDate from 'utils/get-date'
-import { useState } from 'react'
 import MaterialTextField from '@material-ui/core/TextField'
 import { updateCronJob } from 'services/cronjob'
 import { getCookies } from 'utils/cookies'
-import * as constants from 'constants/crontab'
+import { useFormik } from 'formik'
+import cronJobState from 'providers/cronjob-state'
 
 const FormStyled = styled.form`
   width: 100%;
@@ -27,36 +28,25 @@ const FormStyled = styled.form`
 `
 
 function CronJobForm({ cronjob, setCronJob }) {
-  const { id, name, description, created_at, updated_at, workflow_id, scheduling } = cronjob
-  const cron = scheduling.split(' ')
-  const [values, setValues] = useState({
-    name,
-    description,
-    workflow_id,
-    seconds:    cron[0] || '*',
-    minutes:    cron[1] || '*',
-    hours:      cron[2] || '*',
-    dayOfMonth: '?',
-    month:      cron[4] || '*',
-    dayOfWeek:  '*',
-    year:       cron[6] || '*'
+  const { id, created_at, updated_at, } = cronjob
+  const { handleChange, handleSubmit, values } = useFormik({
+    initialValues: cronJobState(cronjob),
+    onSubmit: async values => {
+      const { seconds, minutes, hours, days, month, year, name, description, workflow_id } = values
+      const scheduling = `${seconds.value || '*'} ${minutes.value || '*'} ${hours.value || '*'} ${days.OF_MONTH.value || '?'} ${month.value} ${days.OF_WEEKDAY.value || '*'} ${year.value || '*'}`
+      console.log(scheduling)
+      const { user_token: token } = getCookies()
+      const data = {
+        name,
+        description,
+        workflow_id,
+        scheduling
+      }
+      const { payload } = await updateCronJob(token, id, data)
+      console.log(payload)
+      setCronJob({ ...payload })
+    }
   })
-  const handleChange = event => {
-    setValues({...values, [event.target.name]: event.target.value })
-  }
-  const handleValues = (name, value) => {
-    setValues({ ...values, [name]: value })
-  }
-  const handleSubmit = async event => {
-    event.preventDefault()
-    const { name, description, workflow_id, ...otherProps } = values
-    const crontab = Object.values(otherProps).reduce((accum, current) => `${accum} ${current}`)
-    console.log(crontab)
-    // const { user_token: token } = getCookies()
-    // const { payload } = await updateCronJob(token, id, {...otherProps, scheduling: crontab })
-    // console.log(payload)
-    // setCronJob({ ...payload })
-  }
   return (
     <FormStyled onSubmit={handleSubmit} >
       <div className="cols-4">
@@ -103,59 +93,45 @@ function CronJobForm({ cronjob, setCronJob }) {
           {
             title: 'Segundos',
             component: <CronTabGeneral
-              name={constants.SECONDS}
+              cronState={values.seconds}
+              values={addCheckedValue(values.seconds.value, ',', getTimeValues(0, 59))}
               base="segundo"
-              rawItems={getTimeValues(0, 59)}
-              values={values.seconds}
-              handleValues={handleValues}
             />
           },
           {
             title: 'Minutos',
             component: <CronTabGeneral
-              name={constants.MINUTES}
+              cronState={values.minutes}
+              values={addCheckedValue(values.minutes.value, ',', getTimeValues(0, 59))}
               base="minuto"
-              rawItems={getTimeValues(0, 59)}
-              values={values.minutes}
-              handleValues={handleValues}
             />
           },
           {
             title: 'Horas',
             component: <CronTabGeneral
-              name={constants.HOURS}
+              cronState={values.hours}
+              values={addCheckedValue(values.hours.value, ',', getTimeValues(0, 23))}
               base="hora"
-              rawItems={getTimeValues(0, 23)}
-              values={values.hours}
-              handleValues={handleValues}
             />
           },
           {
             title: 'Dias',
-            component: <CronTabDays
-              dayOfMonth={values.dayOfMonth}
-              dayOfWeek={values.dayOfWeek}
-              handleValues={handleValues}
-            />
+            component: <CronTabDays option={values.days} />
           },
           {
             title: 'Meses',
             component: <CronTabGeneral
-              name={constants.MONTH}
-              base="mes"
-              rawItems={getMonths()}
-              values={values.month}
-              handleValues={handleValues}
+              cronState={values.month}
+              values={addCheckedValue(values.month.value, ',', MONTHS)}
+              base="Mes"
             />
           },
           {
             title: 'Años',
             component: <CronTabGeneral
-              name={constants.YEAR}
-              base="año"
-              rawItems={getYears()}
-              values={values.year}
-              handleValues={handleValues}
+              cronState={values.year}
+              values={addCheckedValue(values.year.value, ',', getYears())}
+              base="Año"
             />
           }
         ]} />

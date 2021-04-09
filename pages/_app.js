@@ -10,7 +10,6 @@ export default function App({ Component, pageProps }) {
     const { token } = pageProps
     const { user_token } = getCookies()
     if (token && !user_token) setCookiesSession(token)
-    console.log('me ejecute')
   }, [pageProps && pageProps.token])
   return (
     <ThemeProvider theme={theme}>
