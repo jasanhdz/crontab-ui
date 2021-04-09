@@ -1,4 +1,12 @@
-import { OPTION_DAY } from 'constants/crontab'
+import { OPTION_DAY_ALL as OPTION_DAY, OPTIONS } from 'constants/crontab'
+
+export function addCheckedValue(stringValue, split, items) {
+  if (stringValue.includes(split)) {
+    const values = stringValue.split(split).map(str => isNaN(str) ? str : Number(str))
+    return items.map(item => ({ ...item, checked: values.includes(item.value) }))
+  }
+  return items.map(item => ({ ...item, checked: false }))
+}
 
 function containts(target = '', pattern) {
   let value = 0
@@ -9,8 +17,6 @@ function containts(target = '', pattern) {
 }
 
 export function cronTabOptionMonthOrWeekday(strMonth, strWeekday) {
-  console.log(strMonth)
-  console.log(strWeekday)
   switch (true) {
     case strWeekday === '*':
       return OPTION_DAY.EVERY_WEEKDAY
@@ -36,5 +42,20 @@ export function cronTabOptionMonthOrWeekday(strMonth, strWeekday) {
       return OPTION_DAY.NUMBER_X_WEEKDAY_OF_MONTH
     default:
       return OPTION_DAY.EVERY_WEEKDAY
+  }
+}
+
+export function cronTabOption(stringValue) {
+  switch (true) {
+    case stringValue === '*':
+      return OPTIONS.EVERY
+    case stringValue.includes('/'):
+      return OPTIONS.START
+    case /^[0-9]*$/.test(stringValue) || stringValue.includes(',') || containts(strWeekday, ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']):
+      return OPTIONS.MANY
+    case stringValue.includes('-'):
+      return OPTIONS.BETWEEN
+    default:
+      return OPTIONS.EVERY
   }
 }

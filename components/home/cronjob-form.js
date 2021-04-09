@@ -2,7 +2,8 @@ import styled from 'styled-components'
 import Tabs from 'common/tabs'
 import CronTabGeneral from 'components/home/crontab/general'
 import CronTabDays from 'components/home/crontab/days'
-import { getTimeValues, getMonths, getYears, addCheckedValue } from 'utils/date-values'
+import { getTimeValues, MONTHS, getYears } from 'utils/date-values'
+import { addCheckedValue } from 'utils/crontab'
 import getDate from 'utils/get-date'
 import MaterialTextField from '@material-ui/core/TextField'
 import { updateCronJob } from 'services/cronjob'
@@ -111,7 +112,7 @@ function CronJobForm({ cronjob, setCronJob }) {
             title: 'Meses',
             component: <CronTabGeneral
               cronState={values.month}
-              values={addCheckedValue(values.month.MANY, ',', getMonths())}
+              values={addCheckedValue(values.month.MANY, ',', MONTHS)}
               base="Mes"
             />
           },

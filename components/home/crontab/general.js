@@ -43,7 +43,7 @@ export default function FormSecond({ cronState, base, values }) {
         {base}(s) comenzando desde el {base}
         <SelectStyled
           disabled={state.current !== OPTIONS.START}
-          value={state.START.split('/')[0] || 2}
+          value={state.START.split('/')[0] || items[0].value}
           onChange={handleChangeStart}
           items={items}
           name="two"
@@ -83,7 +83,7 @@ export default function FormSecond({ cronState, base, values }) {
         </p>
         <SelectStyled
           disabled={state.current !== OPTIONS.BETWEEN}
-          value={state.BETWEEN.split('-')[0] || 0}
+          value={state.BETWEEN.split('-')[0] || items[0].value}
           onChange={handleChangeBetween}
           name="one"
           items={items}
@@ -91,7 +91,7 @@ export default function FormSecond({ cronState, base, values }) {
         y el {base}
         <SelectStyled
           disabled={state.current !== OPTIONS.BETWEEN}
-          value={state.BETWEEN.split('-')[1] || 0}
+          value={state.BETWEEN.split('-')[1] || items[0].value}
           onChange={handleChangeBetween}
           name="two"
           items={items}

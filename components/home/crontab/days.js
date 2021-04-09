@@ -1,6 +1,6 @@
 import { Checkbox, FormControlLabel, FormGroup, Radio } from '@material-ui/core'
 import { FormSecondStyled, SelectStyled } from './styles'
-import { getDays, days, getDaysOfTheMonth, getTimeValues } from 'utils/date-values'
+import { DAYS, getDaysOfTheMonth, getTimeValues } from 'utils/date-values'
 import useCronTabDays from 'hooks/use-crontab-days'
 import { OPTION_DAY_ALL as OPTION } from 'constants/crontab'
 
@@ -46,9 +46,9 @@ export default function CronTabDays({ option }) {
         Dia(s) a partir del 
         <SelectStyled
           disabled={state.current !== OPTION.STARTING_WEEKDAY}
-          items={getDays()}
+          items={DAYS}
           onChange={handleChangeStartWeek}
-          value={days[state.OF_WEEKDAY.STARTING_WEEKDAY.split('/')[0] - 1] || 'Sunday'}
+          value={DAYS[state.OF_WEEKDAY.STARTING_WEEKDAY.split('/')[0] - 1] || DAYS[0].value}
           name="two"
         /> del mes
       </div>
@@ -113,7 +113,7 @@ export default function CronTabDays({ option }) {
               key={idx}
               control={<Checkbox
                 disabled={state.current !== OPTION.MANY_MONTH}
-                checked={item.checked}
+                checked={item.checked || idx === 0}
                 onChange={handleChangeManyMonth}
                 value={item.value}
                 name={idx.toString()}
@@ -147,9 +147,9 @@ export default function CronTabDays({ option }) {
         El último día 
         <SelectStyled
           disabled={state.current !== OPTION.LAST_WEEKDAY_OF_MONTH}
-          value={days[state.OF_WEEKDAY.LAST_WEEKDAY_OF_MONTH.split('L')[0] - 1] || days[1]}
+          value={DAYS[state.OF_WEEKDAY.LAST_WEEKDAY_OF_MONTH.split('L')[0] - 1] || DAYS[1].value}
           onChange={handleChangeLastWeekdayOfMonth}
-          items={getDays()}
+          items={DAYS}
         />
         del mes
       </div>
@@ -197,8 +197,8 @@ export default function CronTabDays({ option }) {
         />
         <SelectStyled
           disabled={state.current !== OPTION.NUMBER_X_WEEKDAY_OF_MONTH}
-          items={getDays()}
-          value={days[state.OF_WEEKDAY.NUMBER_X_WEEKDAY_OF_MONTH.split('#')[0] - 1] || days[1]}
+          items={DAYS}
+          value={DAYS[state.OF_WEEKDAY.NUMBER_X_WEEKDAY_OF_MONTH.split('#')[0] - 1] || DAYS[1].value}
           onChange={handleChangeNumberXWeekdayOfMonth}
           name="two"
         />

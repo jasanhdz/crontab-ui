@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { OPTION_DAY_ALL as OPTION } from 'constants/crontab'
-import { addCheckedValue, days, getDays, getTimeValues } from 'utils/date-values'
+import { DAYS, getTimeValues } from 'utils/date-values'
+import { addCheckedValue } from 'utils/crontab'
 
 export default function useCronTabDays(initialState) {
-  const [manyWeekenday, setManyWeekenday] = useState(addCheckedValue(initialState.OF_WEEKDAY.MANY_WEEKDAY, ',', getDays()))
+  const [manyWeekenday, setManyWeekenday] = useState(addCheckedValue(initialState.OF_WEEKDAY.MANY_WEEKDAY, ',', DAYS))
   const [daysOfMonth, setDaysOfMonth] = useState(addCheckedValue(initialState.OF_MONTH.MANY_MONTH, ',', getTimeValues(1, 31)))
   const [state, setState] = useState(initialState)
   const onChange = event => {
@@ -63,7 +64,7 @@ export default function useCronTabDays(initialState) {
     if (name === 'one') {
       current[1] = event.target.value
     } else {
-      current[0] = days.lastIndexOf(event.target.value) + 1
+      current[0] = DAYS.lastIndexOf(event.target.value) + 1
     }
     state.OF_WEEKDAY.STARTING_WEEKDAY = `${current[0]}/${current[1]}`
     state.OF_WEEKDAY.value = `${current[0]}/${current[1]}`
@@ -103,7 +104,7 @@ export default function useCronTabDays(initialState) {
     setState({ ...state })
   }
   const handleChangeLastWeekdayOfMonth = event => {
-    const value = `${days.lastIndexOf(event.target.value) + 1}L`
+    const value = `${DAYS.lastIndexOf(event.target.value) + 1}L`
     state.OF_WEEKDAY.LAST_WEEKDAY_OF_MONTH = value
     state.OF_WEEKDAY.value = value
     setState({ ...state })
@@ -126,9 +127,8 @@ export default function useCronTabDays(initialState) {
     if (name === 'one') {
       current[1] = event.target.value
     } else {
-      current[0] = days.lastIndexOf(event.target.value) + 1
+      current[0] = DAYS.lastIndexOf(event.target.value) + 1
     }
-    console.log(`${current[0]}#${current[1]}`)
     state.OF_WEEKDAY.NUMBER_X_WEEKDAY_OF_MONTH = `${current[0]}#${current[1]}`
     state.OF_WEEKDAY.value = `${current[0]}#${current[1]}`
     setState({ ...state }) 

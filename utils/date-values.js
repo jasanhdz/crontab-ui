@@ -1,5 +1,27 @@
-export const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+export const DAYS = [
+  { value: 'SUN', tile: 'Domingo' },
+  { value: 'MON', tile: 'Lunes' },
+  { value: 'TUE', tile: 'Martes' },
+  { value: 'WED', tile: 'Miercoles' },
+  { value: 'THU', tile: 'Jueves' },
+  { value: 'FRI', tile: 'Viernes' },
+  { value: 'SAT', tile: 'Sabado' },
+]
 
+export const MONTHS = [
+  { value: 'JAN', tile: 'Enero' },
+  { value: 'FEB', tile: 'Febrero' },
+  { value: 'MAR', tile: 'Marzo' },
+  { value: 'APR', tile: 'Abril' },
+  { value: 'MAY', tile: 'Mayo' },
+  { value: 'JUN', tile: 'Junio' },
+  { value: 'JUL', tile: 'Julio' },
+  { value: 'AUG', tile: 'Agosto' },
+  { value: 'SEP', tile: 'Septiembre' },
+  { value: 'OCT', tile: 'Octubre' },
+  { value: 'NOV', tile: 'Noviembre' },
+  { value: 'DEV', tile: 'Diciembre' },
+]
 export function getTimeValues(min, max) {
   const items = []
   for (let i = min; i <= max; i++) {
@@ -17,12 +39,8 @@ export function getDaysOfTheMonth() {
   })
 }
 
-export function getDays() {
-  return days.map(day => ({ value: day, tile: day }))
-}
-
 export function getMonths() {
-  const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
+  const months = ['Enero', 'Febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
   const items = []
   months.forEach((month) => {
     items.push({ value: month, tile: month.charAt(0).toUpperCase() + month.slice(1) })
@@ -40,27 +58,4 @@ export function getYears(maxYear = 2098) {
   }
 
   return years
-}
-
-export function addCheckedValue(stringValue, split, items) {
-  if (stringValue.includes(split)) {
-    const values = stringValue.split(split).map(str => isNaN(str) ? str : Number(str))
-    return items.map(item => ({ ...item, checked: values.includes(item.value) }))
-  }
-  return items.map(item => ({ ...item, checked: false }))
-}
-
-export function cronTabOption(stringValue) {
-  switch (true) {
-    case stringValue === '*':
-      return 'every'
-    case stringValue.includes('/'):
-      return 'starting'
-    case stringValue.includes(','):
-      return 'many'
-    case stringValue.includes('-'):
-      return 'between'
-    default:
-      return 'every'
-  }
 }
