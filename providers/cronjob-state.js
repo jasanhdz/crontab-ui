@@ -1,7 +1,7 @@
 import { OPTION_DAY, OPTIONS } from 'constants/crontab'
 
 function createState(cronJob) {
-  const { name, description, workflow_id, scheduling } = cronJob
+  const { name, description, workflow_id = '', scheduling } = cronJob
   const cron = scheduling.split(' ')
   return {
     name,

@@ -66,6 +66,7 @@ export default function useCronTabDays(initialState) {
       current[0] = days.lastIndexOf(event.target.value) + 1
     }
     state.OF_WEEKDAY.STARTING_WEEKDAY = `${current[0]}/${current[1]}`
+    state.OF_WEEKDAY.value = `${current[0]}/${current[1]}`
     setState({ ...state })
   }
   const handleChangeStartMonth = event => {
@@ -77,6 +78,7 @@ export default function useCronTabDays(initialState) {
       current[0] = event.target.value
     }
     state.OF_MONTH.STARTING_MONTH = `${current[0]}/${current[1]}`
+    state.OF_MONTH.value = `${current[0]}/${current[1]}`
     setState({ ...state })
   }
   const handleChangeManyWeekenday = event => {
@@ -84,6 +86,7 @@ export default function useCronTabDays(initialState) {
     setManyWeekenday([...manyWeekenday])
     const data = manyWeekenday.filter(item => item.checked).map(item => item.value)
     state.OF_WEEKDAY.MANY_WEEKDAY = data.toString()
+    state.OF_WEEKDAY.value = data.toString()
     setState({ ...state })
   }
   const handleChangeManyMonth = event => {
@@ -91,25 +94,30 @@ export default function useCronTabDays(initialState) {
     setDaysOfMonth([...daysOfMonth ])
     const data = daysOfMonth.filter(item => item.checked).map(item => item.value)
     state.OF_MONTH.MANY_MONTH = data.toString()
+    state.OF_MONTH.value = data.toString()
     setState({ ...state })
   }
   const handleChangeLastDayOfMonth = event => {
     state.OF_MONTH.LAST_DAY_OF_MONTH = 'L'
+    state.OF_MONTH.value = 'L'
     setState({ ...state })
   }
   const handleChangeLastWeekdayOfMonth = event => {
     const value = `${days.lastIndexOf(event.target.value) + 1}L`
     state.OF_WEEKDAY.LAST_WEEKDAY_OF_MONTH = value
+    state.OF_WEEKDAY.value = value
     setState({ ...state })
   }
   const handleChangeDaysBeforeTheEndOfMonth = event => {
     const value = `L-${event.target.value}`
     state.OF_MONTH.DAYS_BEFORE_THE_END_OF_MONTH = value
+    state.OF_MONTH.value = value
     setState({ ...state })
   }
   const handleChangeMonFriClosestToDay = event => {
     const value = `${event.target.value}W`
     state.OF_MONTH.MONFRI_CLOSEST_TO_DAY_OF_THE_MONTH = value
+    state.OF_MONTH.value = value
     setState({ ...state })  
   }
   const handleChangeNumberXWeekdayOfMonth = event => {
@@ -122,6 +130,7 @@ export default function useCronTabDays(initialState) {
     }
     console.log(`${current[0]}#${current[1]}`)
     state.OF_WEEKDAY.NUMBER_X_WEEKDAY_OF_MONTH = `${current[0]}#${current[1]}`
+    state.OF_WEEKDAY.value = `${current[0]}#${current[1]}`
     setState({ ...state }) 
   }
 

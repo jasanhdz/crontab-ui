@@ -4,7 +4,7 @@ import useCronTab from 'hooks/use-crontab'
 import PropTypes from 'prop-types'
 import { OPTIONS } from 'constants/crontab'
 
-export default function FormSecond({ initialState, base, values }) {
+export default function FormSecond({ cronState, base, values }) {
   const {
     state,
     items,
@@ -12,8 +12,7 @@ export default function FormSecond({ initialState, base, values }) {
     handleChangeStart,
     handleChangeItems,
     handleChangeBetween
-  } = useCronTab(initialState, values)
-  
+  } = useCronTab(cronState, values)
   return (
     <FormSecondStyled>
       <div className="center">

@@ -1,35 +1,30 @@
 import { useState } from 'react'
 import { OPTIONS } from 'constants/crontab'
 
-export default function useCronTab(initialState, values) {
+export default function useCronTab(cronState, values) {
   const [items, setItems] = useState(values)
-  const [state, setState] = useState(initialState)
+  const [state, setState] = useState(cronState)
   const handleOption = event => {
     const value = event.target.value
-    state.current = value
-    console.log(value)
+    cronState.current = value
     switch (value) {
       case OPTIONS.EVERY:
-        state.value = state.EVERY
-        console.log(state.EVERY)
+        cronState.value = cronState.EVERY
         break
       case OPTIONS.START:
-        state.value = state.START
-        console.log(state.START)
+        cronState.value = cronState.START
         break
       case OPTIONS.MANY:
-        state.value = state.MANY
-        console.log(state.MANY)
+        cronState.value = cronState.MANY
         break
       case OPTIONS.BETWEEN:
-        state.value = state.BETWEEN
-        console.log(state.BETWEEN)
+        cronState.value = cronState.BETWEEN
         break
     }
-    setState({ ...state })
+    setState({ ...cronState })
   }
   const handleChangeStart = event => {
-    const current = state.START.split('/')
+    const current = cronState.START.split('/')
     const value = event.target.value
     const name = event.target.name
     if (name === 'one') {
@@ -37,19 +32,21 @@ export default function useCronTab(initialState, values) {
     } else {
       current[0] = value
     }
-    state.START = `${current[0]}/${current[1]}`
-    setState({ ...state })
+    cronState.START = `${current[0]}/${current[1]}`
+    cronState.value = `${current[0]}/${current[1]}`
+    setState({ ...cronState })
   }
   const handleChangeItems = event => {
     items[event.target.name].checked = event.target.checked
     setItems([...items])
     const data = items.filter(item => item.checked).map(item => item.value)
-    state.MANY = data.toString()
-    setState({ ...state })
+    cronState.MANY = data.toString()
+    cronState.value = data.toString()
+    setState({ ...cronState })
   }
 
   const handleChangeBetween = event => {
-    const current = state.BETWEEN.split('-')
+    const current = cronState.BETWEEN.split('-')
     const value = event.target.value
     const name = event.target.name
     if (name === 'one') {
@@ -57,8 +54,9 @@ export default function useCronTab(initialState, values) {
     } else {
       current[1] = value
     }
-    state.BETWEEN = `${current[0]}-${current[1]}`
-    setState({ ...state })
+    cronState.BETWEEN = `${current[0]}-${current[1]}`
+    cronState.value = `${current[0]}-${current[1]}`
+    setState({ ...cronState })
   }
 
   return { 

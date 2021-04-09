@@ -1,5 +1,5 @@
 export const OPTIONS = {
-  EVERY:   'EVERT',
+  EVERY:   'EVERY',
   START:   'START',
   MANY:    'MANY',
   BETWEEN: 'BETWEEN'
