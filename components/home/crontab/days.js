@@ -20,7 +20,7 @@ export default function CronTabDays({ option }) {
     daysOfMonth
   } = useCronTabDays(option)
   return (
-    <FormSecondStyled>
+    <FormSecondStyled label="45px">
       <div className="center">
         <Radio
           checked={state.current === OPTION.EVERY_WEEKDAY}
@@ -83,7 +83,7 @@ export default function CronTabDays({ option }) {
           value={OPTION.MANY_WEEKDAY}
         />
         <p>Día específico de la semana (elija uno o varios)</p>
-        <FormGroup className="grid">
+        <FormGroup className="grid-days">
           {manyWeekenday.map((item, idx) => (
             <FormControlLabel
               label={item.tile}
