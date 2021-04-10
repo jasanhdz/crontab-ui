@@ -5,15 +5,6 @@ import TableCell from '@material-ui/core/TableCell'
 import TableSortLabel from '@material-ui/core/TableSortLabel'
 import PropTypes from 'prop-types'
 
-// const headCells = [
-//   { id: 'name', numeric: false, disablePadding: true, label: 'Nombre' },
-//   { id: 'description', numeric: false, disablePadding: false, label: 'Descrición' },
-//   { id: 'scheduling', numeric: false, disablePadding: false, label: 'Scheduling' },
-//   { id: 'id', numeric: true, disablePadding: false, label: 'id' },
-//   { id: 'updated_at', numeric: false, disablePadding: false, label: 'UpdatedAt' },
-//   { id: 'created_at', numeric: false, disablePadding: false, label: 'CreatedAt' },
-// ]
-
 export default function EnhancedTableHead(props) {
   const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, headCells } = props
  
@@ -35,7 +26,6 @@ export default function EnhancedTableHead(props) {
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'center'}
-            // align="center"
             padding={headCell.disablePadding ? 'none' : 'default'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
