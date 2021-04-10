@@ -6,7 +6,7 @@ const SelectStyled = styled(SelectMaterial)``
 
 function Select({ variant, value, onChange, label, items, className, ...otherProps }) {
   return (
-    <FormControl variant={variant}>
+    <FormControl variant={variant} >
       <InputLabel id="select-outlined-label">{label}</InputLabel>
       <SelectStyled
         labelId="select-outlined-label"

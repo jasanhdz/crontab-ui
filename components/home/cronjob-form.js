@@ -10,6 +10,7 @@ import { updateCronJob } from 'services/cronjob'
 import { getCookies } from 'utils/cookies'
 import { useFormik } from 'formik'
 import cronJobState from 'providers/cronjob-state'
+import Select from 'common/select'
 
 const FormStyled = styled.form`
   .dates, .ids, .desc {
@@ -39,7 +40,7 @@ const FormStyled = styled.form`
   }
 `
 
-function CronJobForm({ cronjob, setCronJob }) {
+function CronJobForm({ cronjob, setCronJob, workflows }) {
   const { id, created_at, updated_at, } = cronjob
   const { handleChange, handleSubmit, values } = useFormik({
     initialValues: cronJobState(cronjob),
@@ -84,12 +85,13 @@ function CronJobForm({ cronjob, setCronJob }) {
             value={id}
             disabled
           />
-          <TextField
-            area="workId"
+          <Select
+            variant="standard"
             label="Workflow id"
             value={values.workflow_id}
             onChange={handleChange}
             name="workflow_id"
+            items={workflows}
           />
         </div>
         <div className="desc">
