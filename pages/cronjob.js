@@ -1,9 +1,14 @@
-import Wrapper from 'common/wrapper'
-import { getAllCronJobs } from 'services/cronjob'
+import { UniversalPortal } from '@jesstelford/react-portal-universal'
+import { useState } from 'react'
+import { getAllCronJobs, addCronJob } from 'services/cronjob'
+import { getCookies, getToken } from 'utils/cookies'
 import Table from 'common/table/'
-import { getToken } from 'utils/cookies'
-import { capitalizeFirstLetter, createData } from 'utils/util'
-import { getTimeAgo } from 'utils/get-date'
+import CronJobModel from 'models/cronjob'
+import CronJobListModel from 'models/cronjob-list'
+import Modal from 'common/modal'
+import Overlay from 'common/overlay'
+import Wrapper from 'common/wrapper'
+import CronJobForm from 'components/home/cronjob-form'
 
 export async function getServerSideProps(ctx) {
   const { user_token: token, ...payload } = await getToken(ctx)
@@ -18,18 +23,53 @@ export async function getServerSideProps(ctx) {
   } 
 }
 
-export default function Workflows({ cronjobs = [] }) {
-  const { name, description, scheduling, id, updated_at, created_at } = cronjobs[0]
-  const headCells = Object
-    .keys({ name, description, scheduling, id, updated_at, created_at, action: '' } )
-    .map(key => ({ id: key, numeric: isNaN(key) ? false : true, disablePadding: true, label: capitalizeFirstLetter(key) }))
-  const rows = cronjobs.map(item => {
-    return createData(item.name, item.description, item.scheduling, Number(item.id), getTimeAgo(new Date(item.updated_at).getTime()), getTimeAgo(new Date(item.created_at).getTime()))
-  })
+export default function CronJobs({ cronjobs = [] }) {
+  const [isActiveModal, setIsActiveModal] = useState(false)
+  const ids = [1, 2, 3].map(id => ({ value: id, tile: id }))
+  const headCells = CronJobModel.cronJobHeadCells()
+  const bodyRows = new CronJobListModel(cronjobs).createDataRows()
+  const basicCron = CronJobModel.BasicCronJobSkelleton()
+
+  const handleToggleModal = event => {
+    setIsActiveModal(!isActiveModal)
+  }
+
+  const handleSubmit = async (values) => {
+    const { seconds, minutes, hours, days, month, year, name, description, workflow_id } = values
+    const scheduling = `${seconds.value || '*'} ${minutes.value || '*'} ${hours.value || '*'} ${days.OF_MONTH.value || '?'} ${month.value} ${days.OF_WEEKDAY.value || '*'} ${year.value || '*'}`
+    const payload = {
+      workflow_id,
+      name,
+      description,
+      scheduling
+    }
+    console.log(scheduling)
+    const { user_token: token } = getCookies()
+    const res = await addCronJob(token, payload)
+    console.log(res)
+  }
+
+
   return (
-    <Wrapper>
-      <h1>Cron Jobs All</h1>
-      <Table rows={rows} headCells={headCells} title="CronJobs" />
-    </Wrapper>
+    <>
+      <UniversalPortal selector="#page-portal">
+        {isActiveModal && (
+          <Overlay isActive>
+            <Modal onClose={handleToggleModal}>
+              <CronJobForm handleOnSubmit={handleSubmit} cronjob={basicCron} workflows={ids} />
+            </Modal>
+          </Overlay>
+        )}
+      </UniversalPortal>
+      <Wrapper>
+        <h1>Cron Jobs All</h1>
+        <Table
+          handleToggleModal={handleToggleModal}
+          rows={bodyRows}
+          headCells={headCells}
+          title="CronJobs"
+        />
+      </Wrapper>
+    </>
   )
 }

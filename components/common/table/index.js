@@ -12,7 +12,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import { FormControlLabel, Switch, TablePagination } from '@material-ui/core'
 import Link from 'next/link'
 import { getComparator, stableSort } from 'utils/util'
-// import PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
+import Index from 'pages'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function EnhancedTable(props) {
-  const { headCells, rows, title } = props 
+  const { headCells, rows, title, handleToggleModal } = props 
   const classes = useStyles();
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('calories');
@@ -109,7 +110,11 @@ export default function EnhancedTable(props) {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar title={title} numSelected={selected.length} />
+        <EnhancedTableToolbar
+          handleToggleModal={handleToggleModal}
+          title={title}
+          numSelected={selected.length}
+        />
         <TableContainer>
           <Table
             className={classes.table}
@@ -189,4 +194,11 @@ export default function EnhancedTable(props) {
       />
     </div>
   );
+}
+
+EnhancedTable.propTypes = {
+  title: PropTypes.string,
+  handleToggleModal: PropTypes.func.isRequired,
+  headCells: PropTypes.array.isRequired,
+  rows: PropTypes.array.isRequired
 }

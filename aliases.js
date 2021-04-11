@@ -11,6 +11,7 @@ const alias = {
   services:   `${root}/services`,
   constants:  `${root}/constants`,
   providers:  `${root}/providers`,
+  models:     `${root}/models`,
   root
 }
 

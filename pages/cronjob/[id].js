@@ -23,6 +23,7 @@ export default function CronJob(props) {
   const { cronjob, workflows } = props
   const [state, setState] = useState(cronjob)
   const [ids] = useState(workflows.map(work => ({ value: work.id, tile: work.id })))
+  console.log(cronjob)
   const handleSubmit = async values => {
     const { seconds, minutes, hours, days, month, year, name, description, workflow_id } = values
     const scheduling = `${seconds.value || '*'} ${minutes.value || '*'} ${hours.value || '*'} ${days.OF_MONTH.value || '?'} ${month.value} ${days.OF_WEEKDAY.value || '*'} ${year.value || '*'}`
@@ -34,7 +35,7 @@ export default function CronJob(props) {
       workflow_id,
       scheduling
     }
-    const { payload } = await updateCronJob(token, id, data)
+    const { payload } = await updateCronJob(token, state.id, data)
     console.log(payload)
     setState({ ...payload })
   }

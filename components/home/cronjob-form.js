@@ -10,8 +10,13 @@ import { useFormik } from 'formik'
 import cronJobState from 'providers/cronjob-state'
 import Select from 'common/select'
 import PropTypes from 'prop-types'
+import Button from 'common/button'
 
 const FormStyled = styled.form`
+  .submit {
+    margin: 10px 0;
+    color: white;
+  }
   .dates, .ids, .desc, .grid {
     grid-row-gap: 10px;
     grid-column-gap: 16px;
@@ -27,6 +32,9 @@ const FormStyled = styled.form`
     }
   }
   @media screen and (min-width: 768px) {
+    .submit {
+      width: 150px;
+    }
     .desc {
       grid-template-columns: 120px 1fr;
     }
@@ -83,7 +91,7 @@ export default function CronJobForm(props) {
             <Select
               variant="standard"
               label="Workflow id"
-              value={workflows[0].value}
+              value={values.workflow_id}
               onChange={handleChange}
               name="workflow_id"
               items={workflows}
@@ -152,7 +160,9 @@ export default function CronJobForm(props) {
           />
         }
       ]} />
-      <button type="submit">Enviar</button>
+      <div className="submit">
+        <Button fullWidth type="submit">Enviar</Button>
+      </div>
     </FormStyled>
   )
 }

@@ -6,6 +6,15 @@ export function createData(name, description, scheduling, id, updated_at, create
   return { name, description, scheduling, id, updated_at, created_at };
 }
 
+export function createHeadCell(key, isNumeric = false) {
+  return {
+    id: key,
+    numeric: isNumeric,
+    disablePadding: true,
+    label: capitalizeFirstLetter(key)
+  }
+}
+
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1

@@ -27,10 +27,11 @@ export async function getCronJob(token, id) {
 
 export async function addCronJob(token, payload) {
   try {
-    const res = fetch(`${BASE_API_URL}/api/cronjob`, {
+    const res = await fetch(`${BASE_API_URL}/api/cronjob`, {
       method: 'POST',
-      headers: { Accept: 'application/json', Authorization: token },
-      body: payload
+      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+      Authorization: token,
+      body: JSON.stringify(payload)
     })
     const data = await res.json()
     return data

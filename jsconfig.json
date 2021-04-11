@@ -16,7 +16,8 @@
         "theme/*",
         "hooks/*",
         "services/*",
-        "constants/*"
+        "constants/*",
+        "models/*"
       ],
       "test/*": [
         "test/*"
