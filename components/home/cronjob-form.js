@@ -6,27 +6,20 @@ import { getTimeValues, MONTHS, getYears } from 'utils/date-values'
 import { addCheckedValue } from 'utils/crontab'
 import getDate from 'utils/get-date'
 import TextField from '@material-ui/core/TextField'
-import { updateCronJob } from 'services/cronjob'
-import { getCookies } from 'utils/cookies'
 import { useFormik } from 'formik'
 import cronJobState from 'providers/cronjob-state'
 import Select from 'common/select'
+import PropTypes from 'prop-types'
 
 const FormStyled = styled.form`
-  .dates, .ids, .desc {
+  .dates, .ids, .desc, .grid {
     grid-row-gap: 10px;
     grid-column-gap: 16px;
-  }
-  .dates {
     display: grid;
   }
   .ids {
     margin: 10px 0;
-    display: grid;
     grid-template-columns: repeat(2, 1fr);
-  }
-  .desc {
-    display: grid;
   }
   @media screen and (min-width: 640px) {
     .dates {
@@ -40,60 +33,63 @@ const FormStyled = styled.form`
   }
 `
 
-function CronJobForm({ cronjob, setCronJob, workflows }) {
+export default function CronJobForm(props) {
+  const { cronjob, workflows, handleOnSubmit } = props
   const { id, created_at, updated_at, } = cronjob
   const { handleChange, handleSubmit, values } = useFormik({
     initialValues: cronJobState(cronjob),
-    onSubmit: async values => {
-      const { seconds, minutes, hours, days, month, year, name, description, workflow_id } = values
-      const scheduling = `${seconds.value || '*'} ${minutes.value || '*'} ${hours.value || '*'} ${days.OF_MONTH.value || '?'} ${month.value} ${days.OF_WEEKDAY.value || '*'} ${year.value || '*'}`
-      console.log(scheduling)
-      const { user_token: token } = getCookies()
-      const data = {
-        name,
-        description,
-        workflow_id,
-        scheduling
-      }
-      const { payload } = await updateCronJob(token, id, data)
-      console.log(payload)
-      setCronJob({ ...payload })
-    }
+    onSubmit: handleOnSubmit
   })
   return (
     <FormStyled onSubmit={handleSubmit}>
       <div className="grid">
-        <div className="dates">
-          <TextField
-            area="createdAt"
-            label="creado en"
-            value={getDate(created_at)}
-            disabled
-          />
-          <TextField
-            area="updatedAt"
-            label="ultima actualización"
-            value={getDate(updated_at)}
-            disabled
-            style={{ transition: 500 }}
-          />
-        </div>
-        <div className="ids">
-          <TextField
-            area="id"
-            label="ID"
-            value={id}
-            disabled
-          />
-          <Select
-            variant="standard"
-            label="Workflow id"
-            value={values.workflow_id}
-            onChange={handleChange}
-            name="workflow_id"
-            items={workflows}
-          />
-        </div>
+        {id && (
+          <>
+            <div className="dates">
+              <TextField
+                area="createdAt"
+                label="creado en"
+                value={getDate(created_at)}
+                disabled
+              />
+              <TextField
+                area="updatedAt"
+                label="ultima actualización"
+                value={getDate(updated_at)}
+                disabled
+                style={{ transition: 500 }}
+              />
+            </div>
+            <div className="ids">
+              <TextField
+                area="id"
+                label="ID"
+                value={id}
+                disabled
+              />
+              <Select
+                variant="standard"
+                label="Workflow id"
+                value={values.workflow_id}
+                onChange={handleChange}
+                name="workflow_id"
+                items={workflows}
+              />
+            </div>
+          </>
+        )}
+        {!id && (
+          <div className="grid">
+            <Select
+              variant="standard"
+              label="Workflow id"
+              value={workflows[0].value}
+              onChange={handleChange}
+              name="workflow_id"
+              items={workflows}
+            />
+          </div>
+        )}
         <div className="desc">
           <TextField
             label="Nombre"
@@ -161,4 +157,8 @@ function CronJobForm({ cronjob, setCronJob, workflows }) {
   )
 }
 
-export default CronJobForm
+CronJobForm.propTypes = {
+  cronjob: PropTypes.object.isRequired,
+  workflows: PropTypes.array.isRequired,
+  handleOnSubmit: PropTypes.func.isRequired 
+}
