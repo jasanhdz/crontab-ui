@@ -25,6 +25,12 @@ class CronJob {
     return cronJob.getBasicCronJob()
   }
 
+  static CronJobByPayload(payload) {
+    const { id, name, description, scheduling, workflow_id, updated_at, created_at } = payload
+    const cronjob = new CronJob(id, name, description, scheduling, workflow_id, updated_at, created_at)
+    return  cronjob
+  } 
+
   static cronJobHeadCells() {
     const cells = [
       createHeadCell('name'),

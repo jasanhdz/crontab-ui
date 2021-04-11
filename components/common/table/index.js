@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function EnhancedTable(props) {
-  const { headCells, rows, title, handleToggleModal } = props 
+  const { headCells, rows, title, handleToggleModal, onDeleteItems } = props 
   const classes = useStyles();
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('calories');
@@ -107,6 +107,10 @@ export default function EnhancedTable(props) {
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
+  const handleDeleteItems = (event) => {
+    onDeleteItems(selected, setSelected)
+  }
+
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
@@ -114,6 +118,7 @@ export default function EnhancedTable(props) {
           handleToggleModal={handleToggleModal}
           title={title}
           numSelected={selected.length}
+          handleDeleteItems={handleDeleteItems}
         />
         <TableContainer>
           <Table
@@ -199,6 +204,7 @@ export default function EnhancedTable(props) {
 EnhancedTable.propTypes = {
   title: PropTypes.string,
   handleToggleModal: PropTypes.func.isRequired,
+  onDeleteItems: PropTypes.func.isRequired,
   headCells: PropTypes.array.isRequired,
   rows: PropTypes.array.isRequired
 }

@@ -46,12 +46,16 @@ export function createSchedulingOfValues(values, isCreated) {
   */ 
   const { seconds, minutes, hours, days, month, year } = values
   let daysOfMonth = days.OF_MONTH.value
+  let daysOfWekenday = days.OF_WEEKDAY.value
   // This validation should not be necessary, but to create a resource the value: ?
   if (isCreated) {
     if (!daysOfMonth || daysOfMonth === '?') {
       daysOfMonth = '*'
     }
+    if (!daysOfWekenday || daysOfWekenday === '?') {
+      daysOfWekenday = '*'
+    }
   }
-  const scheduling = `${seconds.value || '*'} ${minutes.value || '*'} ${hours.value || '*'} ${daysOfMonth || '?'} ${month.value} ${days.OF_WEEKDAY.value || '*'} ${year.value || '*'}`
+  const scheduling = `${seconds.value || '*'} ${minutes.value || '*'} ${hours.value || '*'} ${daysOfMonth || '?'} ${month.value} ${daysOfWekenday || '*'} ${year.value || '*'}`
   return scheduling
 }

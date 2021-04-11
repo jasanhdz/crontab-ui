@@ -30,10 +30,7 @@ const useToolbarStyles = makeStyles((theme) => ({
 
 export default function EnhancedTableToolbar (props) {
   const classes = useToolbarStyles()
-  const { numSelected, title, handleToggleModal } = props;
-  const handleClick = event => {
-    console.log('delete file')
-  }
+  const { numSelected, title, handleToggleModal, handleDeleteItems } = props;
 
   return (
     <Toolbar
@@ -54,7 +51,7 @@ export default function EnhancedTableToolbar (props) {
       {numSelected > 0 ? (
         <Tooltip title="Delete">
           <IconButton aria-label="delete">
-            <DeleteIcon onClick={handleClick} />
+            <DeleteIcon onClick={handleDeleteItems} />
           </IconButton>
         </Tooltip>
       ) : (
@@ -71,5 +68,6 @@ export default function EnhancedTableToolbar (props) {
 EnhancedTableToolbar.propTypes = {
   title: PropTypes.string,
   numSelected: PropTypes.number.isRequired,
-  handleToggleModal: PropTypes.func.isRequired
+  handleToggleModal: PropTypes.func.isRequired,
+  handleDeleteItems: PropTypes.func.isRequired
 }

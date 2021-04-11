@@ -57,9 +57,10 @@ export async function updateCronJob(token, id, payload) {
 
 export async function deleteCronJob(token, id) {
   try {
-    const res = fetch(`${BASE_API_URL}/api/cronjob/${id}`, {
+    const res = await fetch(`${BASE_API_URL}/api/cronjob/${id}`, {
       method: 'DELETE',
-      headers: { Accept: 'application/json', Authorization: token },
+      headers: { Accept: 'application/json' },
+      Authorization: token
     })
     const data = await res.json()
     return data

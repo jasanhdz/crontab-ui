@@ -14,7 +14,7 @@ import Button from 'common/button'
 
 const FormStyled = styled.form`
   .submit {
-    margin: 10px 0;
+    margin: 20px auto 0 auto;
     color: white;
   }
   .dates, .ids, .desc, .grid {
@@ -33,7 +33,7 @@ const FormStyled = styled.form`
   }
   @media screen and (min-width: 768px) {
     .submit {
-      width: 150px;
+      width: 200px;
     }
     .desc {
       grid-template-columns: 120px 1fr;

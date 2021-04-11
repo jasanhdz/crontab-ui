@@ -15,7 +15,7 @@ const ModalStyled = styled.div`
   max-height: 100%;
   overflow-y: auto;
   .modal-close {
-    position: absolute;
+    position: fixed;
     right: 1rem;
     top: 1rem;
     cursor: pointer;
@@ -28,6 +28,7 @@ const ModalStyled = styled.div`
   }
 
   @media screen and (min-width: 768px) {
+    max-height: calc(100% - 20px);
     .modal-content {
       padding: 2.5rem;
     }

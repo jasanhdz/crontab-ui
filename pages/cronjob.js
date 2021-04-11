@@ -1,8 +1,9 @@
 import { UniversalPortal } from '@jesstelford/react-portal-universal'
 import { useState } from 'react'
-import { getAllCronJobs, addCronJob } from 'services/cronjob'
+import { getAllCronJobs, addCronJob, deleteCronJob } from 'services/cronjob'
 import { getCookies, getToken } from 'utils/cookies'
 import { createSchedulingOfValues } from 'utils/util'
+import { getAllWorkflows } from 'services/workflow'
 import Table from 'common/table/'
 import CronJob from 'models/cronjob'
 import CronJobList from 'models/cronjob-list'
@@ -14,21 +15,24 @@ import CronJobForm from 'components/home/cronjob-form'
 export async function getServerSideProps(ctx) {
   const { user_token: token, ...payload } = await getToken(ctx)
   const newToken = `${payload.token_type} ${payload.access_token}`
-  const data = await getAllCronJobs(token || newToken)
+  const cronjobs = await getAllCronJobs(token || newToken)
+  const workflows = await getAllWorkflows(token || newToken)
   
   return {
     props: {
-      cronjobs: data,
+      cronjobs,
+      workflows,
       token: payload || null
     }
   } 
 }
 
-export default function CronJobPage({ cronjobs = [] }) {
+export default function CronJobPage({ cronjobs = [], workflows = [] }) {
+  const [jobs, setJobs] = useState(cronjobs)
   const [isActiveModal, setIsActiveModal] = useState(false)
-  const ids = [1, 2, 3].map(id => ({ value: id, tile: id }))
+  const ids = workflows.map(work => ({ value: work.id, tile: work.id }))
   const headCells = CronJob.cronJobHeadCells()
-  const bodyRows = new CronJobList(cronjobs).createDataRows()
+  const bodyRows = new CronJobList(jobs).createDataRows()
   const basicCron = CronJob.BasicCronJobSkelleton()
 
   const handleToggleModal = (event) => {
@@ -44,10 +48,30 @@ export default function CronJobPage({ cronjobs = [] }) {
       description,
       scheduling
     }
-    console.log(scheduling)
     const { user_token: token } = getCookies()
     const res = await addCronJob(token, payload)
-    console.log(res)
+    if (res.success) {
+      setIsActiveModal(false)
+    }
+    const newJob = CronJob.CronJobByPayload(res.payload)
+    console.log(newJob)
+    setJobs([ ...jobs, newJob ])
+  }
+
+  const handleDeleteItems = (selected, setSelected) => {
+    const { user_token: token } = getCookies()
+    const requests = selected.map(id => deleteCronJob(token, id))
+    Promise
+    .all(requests)
+    .then((responses) => {
+      console.log(responses)
+      const newJobs = jobs.filter((job) => {
+        if (selected.indexOf(job.id) === -1) return job
+      })
+      setJobs(newJobs)
+      setSelected([])
+    })
+    .catch((error) => console.error(error.message))
   }
 
 
@@ -66,6 +90,7 @@ export default function CronJobPage({ cronjobs = [] }) {
         <h1>Cron Jobs All</h1>
         <Table
           handleToggleModal={handleToggleModal}
+          onDeleteItems={handleDeleteItems}
           rows={bodyRows}
           headCells={headCells}
           title="CronJobs"
