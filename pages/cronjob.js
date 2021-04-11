@@ -2,9 +2,10 @@ import { UniversalPortal } from '@jesstelford/react-portal-universal'
 import { useState } from 'react'
 import { getAllCronJobs, addCronJob } from 'services/cronjob'
 import { getCookies, getToken } from 'utils/cookies'
+import { createSchedulingOfValues } from 'utils/util'
 import Table from 'common/table/'
-import CronJobModel from 'models/cronjob'
-import CronJobListModel from 'models/cronjob-list'
+import CronJob from 'models/cronjob'
+import CronJobList from 'models/cronjob-list'
 import Modal from 'common/modal'
 import Overlay from 'common/overlay'
 import Wrapper from 'common/wrapper'
@@ -23,20 +24,20 @@ export async function getServerSideProps(ctx) {
   } 
 }
 
-export default function CronJobs({ cronjobs = [] }) {
+export default function CronJobPage({ cronjobs = [] }) {
   const [isActiveModal, setIsActiveModal] = useState(false)
   const ids = [1, 2, 3].map(id => ({ value: id, tile: id }))
-  const headCells = CronJobModel.cronJobHeadCells()
-  const bodyRows = new CronJobListModel(cronjobs).createDataRows()
-  const basicCron = CronJobModel.BasicCronJobSkelleton()
+  const headCells = CronJob.cronJobHeadCells()
+  const bodyRows = new CronJobList(cronjobs).createDataRows()
+  const basicCron = CronJob.BasicCronJobSkelleton()
 
-  const handleToggleModal = event => {
+  const handleToggleModal = (event) => {
     setIsActiveModal(!isActiveModal)
   }
 
   const handleSubmit = async (values) => {
-    const { seconds, minutes, hours, days, month, year, name, description, workflow_id } = values
-    const scheduling = `${seconds.value || '*'} ${minutes.value || '*'} ${hours.value || '*'} ${days.OF_MONTH.value || '?'} ${month.value} ${days.OF_WEEKDAY.value || '*'} ${year.value || '*'}`
+    const { name, description, workflow_id } = values
+    const scheduling = createSchedulingOfValues(values, true)
     const payload = {
       workflow_id,
       name,

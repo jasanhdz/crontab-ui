@@ -22,6 +22,7 @@ export const MONTHS = [
   { value: 'NOV', tile: 'Noviembre' },
   { value: 'DEV', tile: 'Diciembre' },
 ]
+
 export function getTimeValues(min, max) {
   const items = []
   for (let i = min; i <= max; i++) {
