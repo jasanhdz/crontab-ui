@@ -3,7 +3,7 @@ import Typography from '@material-ui/core/Typography'
 import Tooltip from '@material-ui/core/Tooltip'
 import IconButton from '@material-ui/core/IconButton'
 import DeleteIcon from '@material-ui/icons/Delete'
-import FilterListIcon from '@material-ui/icons/FilterList'
+import AddCircle from '@material-ui/icons/AddCircle'
 import { lighten, makeStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
 import clsx from 'clsx'
@@ -31,6 +31,12 @@ const useToolbarStyles = makeStyles((theme) => ({
 export default function EnhancedTableToolbar (props) {
   const classes = useToolbarStyles();
   const { numSelected, title } = props;
+  const handleClick = event => {
+    console.log('delete file')
+  }
+  const handleAddCronJob = event => {
+    console.log('open modal')
+  }
 
   return (
     <Toolbar
@@ -51,13 +57,13 @@ export default function EnhancedTableToolbar (props) {
       {numSelected > 0 ? (
         <Tooltip title="Delete">
           <IconButton aria-label="delete">
-            <DeleteIcon />
+            <DeleteIcon onClick={handleClick} />
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton aria-label="filter list">
-            <FilterListIcon />
+        <Tooltip title="Agregar CronJob">
+          <IconButton aria-label="agregar cronjob">
+            <AddCircle onClick={handleAddCronJob} fontSize="large" color="action" />
           </IconButton>
         </Tooltip>
       )}
