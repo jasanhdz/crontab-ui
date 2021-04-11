@@ -1,3 +1,13 @@
+export const DAYS_BY_NUMBER = [
+  { value: 1, tile: 'Domingo' },
+  { value: 2, tile: 'Lunes' },
+  { value: 3, tile: 'Martes' },
+  { value: 4, tile: 'Miercoles' },
+  { value: 5, tile: 'Jueves' },
+  { value: 6, tile: 'Viernes' },
+  { value: 7, tile: 'Sabado' },
+]
+
 export const DAYS = [
   { value: 'SUN', tile: 'Domingo' },
   { value: 'MON', tile: 'Lunes' },

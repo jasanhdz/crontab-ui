@@ -1,6 +1,6 @@
 import { Checkbox, FormControlLabel, FormGroup, Radio } from '@material-ui/core'
 import { FormSecondStyled, SelectStyled } from './styles'
-import { DAYS, getDaysOfTheMonth, getTimeValues } from 'utils/date-values'
+import { DAYS, DAYS_BY_NUMBER, getDaysOfTheMonth, getTimeValues } from 'utils/date-values'
 import useCronTabDays from 'hooks/use-crontab-days'
 import { OPTION_DAY_ALL as OPTION } from 'constants/crontab'
 
@@ -113,7 +113,7 @@ export default function CronTabDays({ option }) {
               key={idx}
               control={<Checkbox
                 disabled={state.current !== OPTION.MANY_MONTH}
-                checked={item.checked || idx === 0}
+                checked={item.checked}
                 onChange={handleChangeManyMonth}
                 value={item.value}
                 name={idx.toString()}
@@ -147,9 +147,9 @@ export default function CronTabDays({ option }) {
         El último día 
         <SelectStyled
           disabled={state.current !== OPTION.LAST_WEEKDAY_OF_MONTH}
-          value={DAYS[state.OF_WEEKDAY.LAST_WEEKDAY_OF_MONTH.split('L')[0] - 1] || DAYS[1].value}
+          value={DAYS_BY_NUMBER[state.OF_WEEKDAY.LAST_WEEKDAY_OF_MONTH.split('L')[0] - 1].value}
           onChange={handleChangeLastWeekdayOfMonth}
-          items={DAYS}
+          items={DAYS_BY_NUMBER}
         />
         del mes
       </div>
@@ -197,10 +197,10 @@ export default function CronTabDays({ option }) {
         />
         <SelectStyled
           disabled={state.current !== OPTION.NUMBER_X_WEEKDAY_OF_MONTH}
-          items={DAYS}
-          value={DAYS[state.OF_WEEKDAY.NUMBER_X_WEEKDAY_OF_MONTH.split('#')[0] - 1] || DAYS[1].value}
+          value={DAYS_BY_NUMBER[state.OF_WEEKDAY.NUMBER_X_WEEKDAY_OF_MONTH.split('#')[0] - 1].value}
           onChange={handleChangeNumberXWeekdayOfMonth}
           name="two"
+          items={DAYS_BY_NUMBER}
         />
         del mes
       </div>'

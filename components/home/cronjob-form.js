@@ -119,7 +119,7 @@ export default function CronJobForm(props) {
           title: 'Segundos',
           component: <CronTabGeneral
             cronState={values.seconds}
-            values={addCheckedValue(values.seconds.value, ',', getTimeValues(0, 59))}
+            values={addCheckedValue(values.seconds.value, ',', getTimeValues(0, 59), values.seconds.MANY)}
             base="segundo"
           />
         },
@@ -127,7 +127,7 @@ export default function CronJobForm(props) {
           title: 'Minutos',
           component: <CronTabGeneral
             cronState={values.minutes}
-            values={addCheckedValue(values.minutes.value, ',', getTimeValues(0, 59))}
+            values={addCheckedValue(values.minutes.value, ',', getTimeValues(0, 59), values.minutes.MANY)}
             base="minuto"
           />
         },
@@ -135,7 +135,7 @@ export default function CronJobForm(props) {
           title: 'Horas',
           component: <CronTabGeneral
             cronState={values.hours}
-            values={addCheckedValue(values.hours.value, ',', getTimeValues(0, 23))}
+            values={addCheckedValue(values.hours.value, ',', getTimeValues(0, 23), values.hours.MANY)}
             base="hora"
           />
         },
@@ -147,7 +147,7 @@ export default function CronJobForm(props) {
           title: 'Meses',
           component: <CronTabGeneral
             cronState={values.month}
-            values={addCheckedValue(values.month.value, ',', MONTHS)}
+            values={addCheckedValue(values.month.value, ',', MONTHS, values.month.MANY)}
             base="Mes"
           />
         },
@@ -155,7 +155,7 @@ export default function CronJobForm(props) {
           title: 'Años',
           component: <CronTabGeneral
             cronState={values.year}
-            values={addCheckedValue(values.year.value, ',', getYears())}
+            values={addCheckedValue(values.year.value, ',', getYears(), values.year.MANY)}
             base="Año"
           />
         }

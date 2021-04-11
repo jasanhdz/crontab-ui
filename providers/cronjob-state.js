@@ -10,6 +10,7 @@ function createState(cronJob) {
   const month      = cron[4] || '*'
   const dayOfWeek  = cron[5] || '*'
   const year       = cron[6] || '*'
+  
   return {
     name,
     description,
@@ -18,20 +19,20 @@ function createState(cronJob) {
       current: cronTabOptionMonthOrWeekday(dayOfMonth, dayOfWeek),
       OF_MONTH: {
         value: dayOfMonth,
-        STARTING_MONTH: '',
-        MANY_MONTH: '',
-        LAST_DAY_OF_MONTH: '',
-        LAST_WORKING_DAY_OF_EVERY_MONTH: '',
-        DAYS_BEFORE_THE_END_OF_MONTH: '',
-        MONFRI_CLOSEST_TO_DAY_OF_THE_MONTH: '',
+        STARTING_MONTH: '1/1',
+        MANY_MONTH: '1,2',
+        LAST_DAY_OF_MONTH: 'L',
+        LAST_WORKING_DAY_OF_EVERY_MONTH: 'LW',
+        DAYS_BEFORE_THE_END_OF_MONTH: 'L-1',
+        MONFRI_CLOSEST_TO_DAY_OF_THE_MONTH: '1W',
       },
       OF_WEEKDAY: {
         value: dayOfWeek,
-        LAST_WEEKDAY_OF_MONTH: '',
-        EVERY_WEEKDAY: '',
-        STARTING_WEEKDAY: '',
-        MANY_WEEKDAY: '',
-        NUMBER_X_WEEKDAY_OF_MONTH: '',
+        LAST_WEEKDAY_OF_MONTH: '1L',
+        EVERY_WEEKDAY: '*',
+        STARTING_WEEKDAY: 'SUN/1',
+        MANY_WEEKDAY: 'SUN,MON',
+        NUMBER_X_WEEKDAY_OF_MONTH: '1#1',
       },
     },
     seconds: {

@@ -27,18 +27,18 @@ export default function CronJob(props) {
   
   const handleSubmit = async values => {
     const { name, description, workflow_id } = values
-    const scheduling = createSchedulingOfValues(values, true)
+    const scheduling = createSchedulingOfValues(values)
     console.log(scheduling)
-    const { user_token: token } = getCookies()
-    const data = {
-      name,
-      description,
-      workflow_id,
-      scheduling
-    }
-    const { payload } = await updateCronJob(token, state.id, data)
-    console.log(payload)
-    setState({ ...payload })
+    // const { user_token: token } = getCookies()
+    // const data = {
+    //   name,
+    //   description,
+    //   workflow_id,
+    //   scheduling
+    // }
+    // const { payload } = await updateCronJob(token, state.id, data)
+    // console.log(payload)
+    // setState({ ...payload })
   }
 
   return (
