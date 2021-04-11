@@ -7,7 +7,6 @@ export async function getAllWorkflows(token) {
       headers: { Accept: 'application/json', Authorization: token },
     })
     const data = await res.json()
-    console.log(data)
     return data
   } catch({ message }) {
     console.error(message)
@@ -20,7 +19,6 @@ export async function getWorkflow(token, id) {
       headers: { Accept: 'application/json', Authorization: token }
     })
     const data = await res.json()
-    console.log(data)
     return data
   } catch ({ message }) {
     console.error(message)

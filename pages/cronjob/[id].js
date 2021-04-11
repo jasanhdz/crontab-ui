@@ -10,17 +10,17 @@ export async function getServerSideProps(ctx) {
   const newToken = `${payload.token_type} ${payload.access_token}`
   const cronjob = await getCronJob(token || newToken, ctx.query.id)
   const workflows = await getAllWorkflows(token || newToken)
-  
   return {
     props: {
       cronjob,
       workflows,
-      token: newToken || null
+      token: payload || null
     }
   }
 }
 
-export default function CronJob({ cronjob, workflows }) {
+export default function CronJob(props) {
+  const { cronjob, workflows } = props
   const [state, setState] = useState(cronjob)
   const [ids] = useState(workflows.map(work => ({ value: work.id, tile: work.id })))
   return (
