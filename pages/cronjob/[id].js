@@ -4,7 +4,7 @@ import { getAllWorkflows } from 'services/workflow'
 import { getCookies, getToken } from 'utils/cookies'
 import { createSchedulingOfValues } from 'utils/util'
 import Wrapper from 'common/wrapper'
-import CronJobForm from 'components/home/cronjob-form'
+import CronJobForm from 'cronjob/cronjob-form'
 
 export async function getServerSideProps(ctx) {
   const { user_token: token, ...payload } = await getToken(ctx)

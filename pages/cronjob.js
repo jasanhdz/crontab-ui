@@ -1,5 +1,5 @@
-import { UniversalPortal } from '@jesstelford/react-portal-universal'
 import { useState } from 'react'
+import { UniversalPortal } from '@jesstelford/react-portal-universal'
 import { getAllCronJobs, addCronJob, deleteCronJob } from 'services/cronjob'
 import { getCookies, getToken } from 'utils/cookies'
 import { createSchedulingOfValues } from 'utils/util'
@@ -10,7 +10,7 @@ import CronJobList from 'models/cronjob-list'
 import Modal from 'common/modal'
 import Overlay from 'common/overlay'
 import Wrapper from 'common/wrapper'
-import CronJobForm from 'components/home/cronjob-form'
+import CronJobForm from 'cronjob/cronjob-form'
 
 export async function getServerSideProps(ctx) {
   const { user_token: token, ...payload } = await getToken(ctx)
@@ -31,7 +31,7 @@ export default function CronJobPage({ cronjobs = [], workflows = [] }) {
   const [jobs, setJobs] = useState(cronjobs)
   const [isActiveModal, setIsActiveModal] = useState(false)
   const ids = workflows.map(work => ({ value: work.id, tile: work.id }))
-  const headCells = CronJob.cronJobHeadCells()
+  const cells = CronJob.cronJobHeadCells()
   const bodyRows = new CronJobList(jobs).createDataRows()
   const basicCron = CronJob.BasicCronJobSkelleton()
 
@@ -52,10 +52,10 @@ export default function CronJobPage({ cronjobs = [], workflows = [] }) {
     const res = await addCronJob(token, payload)
     if (res.success) {
       setIsActiveModal(false)
+      const newJob = CronJob.CronJobByPayload(res.payload)
+      console.log(newJob)
+      setJobs([...jobs, newJob])
     }
-    const newJob = CronJob.CronJobByPayload(res.payload)
-    console.log(newJob)
-    setJobs([ ...jobs, newJob ])
   }
 
   const handleDeleteItems = (selected, setSelected) => {
@@ -92,7 +92,7 @@ export default function CronJobPage({ cronjobs = [], workflows = [] }) {
           handleToggleModal={handleToggleModal}
           onDeleteItems={handleDeleteItems}
           rows={bodyRows}
-          headCells={headCells}
+          cells={cells}
           title="CronJobs"
         />
       </Wrapper>

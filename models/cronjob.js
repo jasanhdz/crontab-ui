@@ -32,16 +32,15 @@ class CronJob {
   } 
 
   static cronJobHeadCells() {
-    const cells = [
-      createHeadCell('name'),
-      createHeadCell('description'),
-      createHeadCell('scheduling'),
-      createHeadCell('id', true),
-      createHeadCell('updated_at'),
-      createHeadCell('created_at'),
-      createHeadCell('action'),
-    ] 
-    return cells
+    const keys = ['name', 'description', 'scheduling', 'id', 'updated_at', 'created_at']
+    const cells = keys.map(key => {
+      if(key === 'id') return createHeadCell(key, true)
+      return createHeadCell(key)
+    }) 
+    return {
+      keys,
+      headCells: [ ...cells, createHeadCell('action') ]
+    }
   }
 }
 

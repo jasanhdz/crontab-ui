@@ -11,9 +11,9 @@ import EnhancedTableToolbar from 'common/table/enhanced-table-toolbar'
 import { makeStyles } from '@material-ui/core/styles'
 import { FormControlLabel, Switch, TablePagination } from '@material-ui/core'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { getComparator, stableSort } from 'utils/util'
 import PropTypes from 'prop-types'
-import Index from 'pages'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,8 +46,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function EnhancedTable(props) {
-  const { headCells, rows, title, handleToggleModal, onDeleteItems } = props 
-  const classes = useStyles();
+  const { cells, rows, title, handleToggleModal, onDeleteItems, keys } = props 
+  const classes = useStyles()
+  const router = useRouter()
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('calories');
   const [selected, setSelected] = useState([]);
@@ -135,7 +136,7 @@ export default function EnhancedTable(props) {
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
-              headCells={headCells}
+              headCells={cells.headCells}
               title={title}
             />
             <TableBody>
@@ -159,16 +160,9 @@ export default function EnhancedTable(props) {
                           inputProps={{ 'aria-labelledby': labelId }}
                         />
                       </TableCell>
-                      <TableCell component="th" id={labelId} scope="row" padding="none">
-                        {row.name}
-                      </TableCell>
-                      <TableCell align="right">{row.description}</TableCell>
-                      <TableCell align="right">{row.scheduling}</TableCell>
-                      <TableCell align="right">{row.id}</TableCell>
-                      <TableCell align="right">{row.updated_at}</TableCell>
-                      <TableCell align="right">{row.created_at}</TableCell>
+                      {cells.keys.map((key) => <TableCell align="center">{row[key]}</TableCell>)}
                       <TableCell align="right">
-                        <Link href={`/cronjob/${row.id}`}>
+                        <Link href={`${router.asPath}/${row.id}`}>
                           <a className={classes.button} >Editar</a>
                         </Link>
                       </TableCell>
@@ -205,6 +199,9 @@ EnhancedTable.propTypes = {
   title: PropTypes.string,
   handleToggleModal: PropTypes.func.isRequired,
   onDeleteItems: PropTypes.func.isRequired,
-  headCells: PropTypes.array.isRequired,
+  cells: PropTypes.shape({
+    keys: PropTypes.array.isRequired,
+    headCells: PropTypes.array.isRequired
+  }),
   rows: PropTypes.array.isRequired
 }

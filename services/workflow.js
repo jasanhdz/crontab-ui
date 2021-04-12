@@ -27,10 +27,10 @@ export async function getWorkflow(token, id) {
 
 export async function addWorkflow(token, payload) {
   try {
-    const res = fetch(`${BASE_API_URL}/api/workflow`, {
+    const res = await fetch(`${BASE_API_URL}/api/workflow`, {
       method: 'POST',
-      headers: { Accept: 'application/json', Authorization: token },
-      body: payload
+      headers: { Accept: 'application/json', 'Content-Type': 'application/json', Authorization: token, },
+      body: JSON.stringify(payload)
     })
     const data = await res.json()
     return data
@@ -41,10 +41,10 @@ export async function addWorkflow(token, payload) {
 
 export async function updateWorkflow(token, id, payload) {
   try {
-    const res = fetch(`${BASE_API_URL}/api/workflow/${id}`, {
+    const res = await fetch(`${BASE_API_URL}/api/workflow/${id}`, {
       method: 'PUT',
-      headers: { Accept: 'application/json', Authorization: token },
-      body: payload
+      headers: { Accept: 'application/json', 'Content-Type': 'application/json', Authorization: token },
+      body: JSON.stringify(payload)
     })
     const data = await res.json()
     return data
@@ -55,7 +55,7 @@ export async function updateWorkflow(token, id, payload) {
 
 export async function deleteWorkflow(token, id) {
   try {
-    const res = fetch(`${BASE_API_URL}/api/workflow/${id}`, {
+    const res = await fetch(`${BASE_API_URL}/api/workflow/${id}`, {
       method: 'DELETE',
       headers: { Accept: 'application/json', Authorization: token },
     })
