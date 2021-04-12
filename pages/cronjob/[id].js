@@ -5,6 +5,7 @@ import { getCookies, getToken } from 'utils/cookies'
 import { createSchedulingOfValues } from 'utils/util'
 import Wrapper from 'common/wrapper'
 import CronJobForm from 'cronjob/cronjob-form'
+import Navigation from 'common/navigation'
 
 export async function getServerSideProps(ctx) {
   const { user_token: token, ...payload } = await getToken(ctx)
@@ -42,9 +43,12 @@ export default function CronJob(props) {
   }
 
   return (
-    <Wrapper>
-      <h2 style={{ marginTop: 0 }}>CronJob</h2>
-      <CronJobForm  cronjob={state} workflows={ids} handleOnSubmit={handleSubmit}  />
-    </Wrapper>
+    <>
+      <Navigation />
+      <Wrapper>
+        <h2 style={{ marginTop: 0 }}>CronJob</h2>
+        <CronJobForm  cronjob={state} workflows={ids} handleOnSubmit={handleSubmit}  />
+      </Wrapper>
+    </>
   )
 }

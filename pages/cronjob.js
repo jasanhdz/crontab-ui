@@ -11,6 +11,7 @@ import Modal from 'common/modal'
 import Overlay from 'common/overlay'
 import Wrapper from 'common/wrapper'
 import CronJobForm from 'cronjob/cronjob-form'
+import Navigation from 'common/navigation'
 
 export async function getServerSideProps(ctx) {
   const { user_token: token, ...payload } = await getToken(ctx)
@@ -86,6 +87,7 @@ export default function CronJobPage({ cronjobs = [], workflows = [] }) {
           </Overlay>
         )}
       </UniversalPortal>
+      <Navigation />
       <Wrapper>
         <h1>Cron Jobs All</h1>
         <Table

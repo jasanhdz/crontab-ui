@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { getWorkflow } from 'services/workflow'
+import { getCookies } from 'utils/cookies'
+import { updateWorkflow } from 'services/workflow'
 import createToken from 'services/createToken'
 import Wrapper from 'common/wrapper'
 import WorkFlowForm from 'workflow/workflow-form'
-import { updateWorkflow } from 'services/workflow'
-import { getCookies } from 'utils/cookies'
+import Navigation from 'common/navigation'
 
 export async function getServerSideProps(ctx) {
   const { access_token: token } = await createToken()
@@ -29,9 +30,12 @@ export default function WorkFlow(props) {
   }
 
   return (
-    <Wrapper>
-      <h1>{state.name}</h1>
-      <WorkFlowForm workflow={state} onSubmit={handleSubmit} />
-    </Wrapper>
+    <>
+      <Navigation />
+      <Wrapper>
+        <h1>{state.name}</h1>
+        <WorkFlowForm workflow={state} onSubmit={handleSubmit} />
+      </Wrapper>
+    </>
   )
 }

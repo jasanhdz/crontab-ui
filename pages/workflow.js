@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { UniversalPortal } from '@jesstelford/react-portal-universal'
 import { addWorkflow, getAllWorkflows, deleteWorkflow } from 'services/workflow'
+import { getCookies } from 'utils/cookies'
 import createToken from 'services/createToken'
 import Wrapper from 'common/wrapper'
 import Workflow from 'models/workflow'
@@ -9,7 +10,7 @@ import Table from 'common/table/'
 import Modal from 'common/modal'
 import Overlay from 'common/overlay'
 import WorkFlowForm from 'workflow/workflow-form'
-import { getCookies } from 'utils/cookies'
+import Navigation from 'common/navigation'
 
 export async function getServerSideProps(ctx) {
   const { access_token: token } = await createToken()
@@ -70,6 +71,7 @@ export default function WorkflowPage({ workflows = [] }) {
           </Overlay>
         )}
       </UniversalPortal>
+      <Navigation />
       <Wrapper>
         <h1>WorkFlows all</h1>
         <Table
