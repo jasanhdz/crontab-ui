@@ -2,26 +2,34 @@ import 'isomorphic-fetch'
 import { BASE_API_URL } from 'constants/environment'
 
 export async function getAllCronJobs(token) {
+  let cronjobs = []
   try {
     const res = await fetch(`${BASE_API_URL}/api/cronjob`, {
       headers: { Accept: 'application/json', Authorization: token },
     })
-    const data = await res.json()
-    return data
+    if (res.status >= 400) {
+      return { statusCode: res.status, cronjobs }
+    }
+    cronjobs = await res.json()
+    return { cronjobs, statusCode: false }
   } catch({ message }) {
-    console.error(message)
+    return { statusCode: 503, cronjobs }
   }
 }
 
 export async function getCronJob(token, id) {
+  let cronjob = []
   try {
     const res = await fetch(`${BASE_API_URL}/api/cronjob/${id}`, {
       headers: { Accept: 'application/json', Authorization: token }
     })
-    const data = await res.json()
-    return data
+    if (res.status >= 400) {
+      return { statusCode: res.status, cronjob }
+    }
+    cronjob = await res.json()
+    return { cronjob, statusCode: false }
   } catch ({ message }) {
-    console.error(message)
+    return { statusCode: 503, cronjob }
   }
 }
 

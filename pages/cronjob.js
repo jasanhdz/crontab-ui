@@ -13,15 +13,17 @@ import Overlay from 'common/overlay'
 import Wrapper from 'common/wrapper'
 import CronJobForm from 'cronjob/cronjob-form'
 import Navigation from 'common/navigation'
-
+import Error from 'pages/_error'
 
 export const getServerSideProps = Authentication(async (ctx, token) => {
-  const cronjobs = await getAllCronJobs(token)
-  const workflows = await getAllWorkflows(token)
-  return { props: { cronjobs, workflows } }
+  const { statusCode, cronjobs } = await getAllCronJobs(token)
+  const { workflows } = await getAllWorkflows(token)
+  return { props: { statusCode, cronjobs, workflows } }
 })
 
-export default function CronJobPage({ cronjobs = [], workflows = [] }) {
+export default function CronJobPage(props) {
+  const { cronjobs = [], workflows = [], statusCode } = props
+  if (statusCode) return <Error statusCode={500} />
   const [jobs, setJobs] = useState(cronjobs)
   const [isActiveModal, setIsActiveModal] = useState(false)
   const ids = workflows.map(work => ({ value: work.id, tile: work.id }))

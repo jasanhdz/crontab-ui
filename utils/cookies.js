@@ -1,5 +1,4 @@
 import Cookies from 'universal-cookie'
-import createToken from 'services/createToken'
 
 export function getCookies(ctx) {
   if (ctx) {

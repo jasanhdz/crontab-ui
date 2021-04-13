@@ -50,14 +50,14 @@ export default function EnhancedTableToolbar (props) {
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton aria-label="delete">
-            <DeleteIcon onClick={handleDeleteItems} />
+          <IconButton onClick={handleDeleteItems} aria-label="delete">
+            <DeleteIcon />
           </IconButton>
         </Tooltip>
       ) : (
         <Tooltip title="Agregar CronJob">
-          <IconButton aria-label="agregar cronjob">
-            <AddCircle onClick={handleToggleModal} fontSize="large" color="action" />
+          <IconButton onClick={handleToggleModal} aria-label="agregar cronjob">
+            <AddCircle fontSize="large" color="action" />
           </IconButton>
         </Tooltip>
       )}

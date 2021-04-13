@@ -11,6 +11,7 @@ export default class MyDocument extends Document {
           <meta charSet="utf-8" />
           <meta name="theme-color" content="#3f51b5" />
           <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700&display=swap" rel="stylesheet" />  
+          <link href="https://fonts.googleapis.com/css?family=Anton" rel="stylesheet" />  
         </Head>
         <body>
           <Main />

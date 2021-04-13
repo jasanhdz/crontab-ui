@@ -7,15 +7,18 @@ import Authentication from 'hoc/authentication'
 import Wrapper from 'common/wrapper'
 import CronJobForm from 'cronjob/cronjob-form'
 import Navigation from 'common/navigation'
+import Error from 'pages/_error'
 
 export const getServerSideProps = Authentication(async (ctx, token) => {
-  const cronjob = await getCronJob(token, ctx.query.id)
-  const workflows = await getAllWorkflows(token)
-  return { props: { cronjob, workflows } }
+  const { cronjob, statusCode } = await getCronJob(token, ctx.query.id)
+  const { workflows } = await getAllWorkflows(token)
+
+  return { props: { statusCode, cronjob, workflows } }
 })
 
 export default function CronJob(props) {
-  const { cronjob, workflows } = props
+  const { cronjob, workflows, statusCode } = props
+  if (statusCode) return <Error statusCode={statusCode} />
   const [state, setState] = useState(cronjob)
   const ids = workflows.map(work => ({ value: work.id, tile: work.id }))
   

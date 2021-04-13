@@ -11,7 +11,7 @@ const menux = [
     url: '/cronjob'
   },
   {
-    title: '404',
+    title: 'Página 404',
     url: '/notfound'
   }
 ]
@@ -44,6 +44,7 @@ const MenuStyled = styled.div`
       font-size: 24px;
     }
     a {
+      display: block;
       color: inherit;
       letter-spacing: 1.5px;
       font-weight: 500;

@@ -75,16 +75,18 @@ export default function Navigation() {
   useEffect(() => {
     if (window !== 'undefined') {
       const $body = document.getElementsByTagName('body')[0]
-      const hammer = new Hammer($body)
-      hammer.on('swipeleft', toogleChecked)
-      hammer.on('swiperight', toogleChecked)
+      if (Hammer) {
+        const hammer = new Hammer($body)
+        hammer.on('swipeleft', toogleChecked)
+        hammer.on('swiperight', toogleChecked)
+      } 
     }
   }, [])
   return (
     <NavigationStyled>
       <Wrapper>
         <input ref={element} className="checkbox" type="checkbox" id="toogle-button" name="active" />
-        <Link href="/">
+        <Link href="/cronjob">
           <a className="logo">Booleand</a>
         </Link>
         <label htmlFor="toogle-button" className="toogle-button">

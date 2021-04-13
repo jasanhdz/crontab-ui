@@ -11,13 +11,16 @@ import Modal from 'common/modal'
 import Overlay from 'common/overlay'
 import WorkFlowForm from 'workflow/workflow-form'
 import Navigation from 'common/navigation'
+import Error from 'pages/_error'
 
 export const getServerSideProps = Authentication(async (ctx, token) => {
-  const workflows = await getAllWorkflows(token)
-  return { props: { workflows } }
+  const { statusCode, workflows } = await getAllWorkflows(token)
+  return { props: { statusCode, workflows } }
 }) 
 
-export default function WorkflowPage({ workflows = [] }) {
+export default function WorkflowPage(props) {
+  const { workflows = [], statusCode } = props
+  if (statusCode) return <Error />
   const [works, setWorks] = useState(workflows)
   const [isActiveModal, setIsActiveModal] = useState(false)
   const cells = Workflow.workflowHeadCells()

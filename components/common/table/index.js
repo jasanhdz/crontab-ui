@@ -1,3 +1,8 @@
+import { useState } from 'react'
+import { UniversalPortal } from '@jesstelford/react-portal-universal'
+import { makeStyles } from '@material-ui/core/styles'
+import PropTypes from 'prop-types'
+import Link from 'next/link'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import TableContainer from '@material-ui/core/TableContainer'
@@ -5,15 +10,13 @@ import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
 import Paper from '@material-ui/core/Paper'
 import Checkbox from '@material-ui/core/Checkbox'
-import { useState } from 'react'
+import { ModalConfirm } from 'common/modal'
+import Overlay from 'common/overlay'
 import EnhancedTableHead from 'common/table/enhanced-table-head'
 import EnhancedTableToolbar from 'common/table/enhanced-table-toolbar'
-import { makeStyles } from '@material-ui/core/styles'
 import { FormControlLabel, Switch, TablePagination } from '@material-ui/core'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { getComparator, stableSort } from 'utils/util'
-import PropTypes from 'prop-types'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -55,6 +58,7 @@ export default function EnhancedTable(props) {
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [isActiveModal, setIsActiveModal] = useState(false)
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -109,11 +113,28 @@ export default function EnhancedTable(props) {
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   const handleDeleteItems = (event) => {
+    hiddenToogleModalClose()
+  }
+  const hiddenToogleModalClose = event => {
+    setIsActiveModal(!isActiveModal)
+  }
+
+  const confirmDeleteItems = event => {
     onDeleteItems(selected, setSelected)
+    hiddenToogleModalClose()
   }
 
   return (
     <div className={classes.root}>
+      <UniversalPortal selector="#page-portal">
+        {isActiveModal && (
+          <Overlay isActive>
+            <ModalConfirm onClose={hiddenToogleModalClose} onConfirm={confirmDeleteItems}>
+              <p>Estas seguro que deseas borrar {selected.length > 1 && 'los'} {selected.length} elemento{selected.length > 1 && 's'}</p>
+            </ModalConfirm>
+          </Overlay>
+        )}
+      </UniversalPortal>
       <Paper className={classes.paper}>
         <EnhancedTableToolbar
           handleToggleModal={handleToggleModal}
@@ -160,7 +181,7 @@ export default function EnhancedTable(props) {
                           inputProps={{ 'aria-labelledby': labelId }}
                         />
                       </TableCell>
-                      {cells.keys.map((key) => <TableCell align="center">{row[key]}</TableCell>)}
+                      {cells.keys.map((key, index) => <TableCell key={index} align="center">{row[key]}</TableCell>)}
                       <TableCell align="right">
                         <Link href={`${router.asPath}/${row.id}`}>
                           <a className={classes.button} >Editar</a>

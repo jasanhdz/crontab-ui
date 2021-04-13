@@ -2,26 +2,34 @@ import 'isomorphic-fetch'
 import { BASE_API_URL } from 'constants/environment'
 
 export async function getAllWorkflows(token) {
+  let workflows = []
   try {
     const res = await fetch(`${BASE_API_URL}/api/workflow`, {
       headers: { Accept: 'application/json', Authorization: token },
     })
-    const data = await res.json()
-    return data
+    if (res.status >= 400) {
+      return { statusCode: res.status, workflows }
+    } 
+    workflows = await res.json()
+    return { statusCode: false, workflows }
   } catch({ message }) {
-    console.error(message)
+    return { statusCode: 503, workflows }
   }
 }
 
 export async function getWorkflow(token, id) {
+  let workflow = []
   try {
     const res = await fetch(`${BASE_API_URL}/api/workflow/${id}`, {
       headers: { Accept: 'application/json', Authorization: token }
     })
-    const data = await res.json()
-    return data
+    if (res.status >= 400) {
+      return { statusCode: res.status, workflows }
+    } 
+    workflow = await res.json()
+    return { statusCode: false, workflow }
   } catch ({ message }) {
-    console.error(message)
+    return { statusCode: 503, workflow }
   }
 }
 

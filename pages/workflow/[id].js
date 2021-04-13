@@ -6,14 +6,16 @@ import Authentication from 'hoc/authentication'
 import Wrapper from 'common/wrapper'
 import WorkFlowForm from 'workflow/workflow-form'
 import Navigation from 'common/navigation'
+import Error from 'pages/_error'
 
 export const getServerSideProps = Authentication(async (ctx, token) => {
-  const workflow  = await getWorkflow(token, ctx.query.id)
-  return { props: { workflow } }
+  const { statusCode, workflow } = await getWorkflow(token, ctx.query.id)
+  return { props: { statusCode, workflow } }
 })
 
 export default function WorkFlow(props) {
-  const { workflow } = props
+  const { workflow, statusCode } = props
+  if (statusCode) return <Error statusCode={statusCode} />
   const [state, setState] = useState(workflow)
   
   const handleSubmit = async (values) => {

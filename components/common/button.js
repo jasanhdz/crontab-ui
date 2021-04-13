@@ -44,7 +44,7 @@ const PrimaryButton = styled.button`
 
 const SecondaryButton = styled(PrimaryButton)`
   background-color: transparent;
-  border: 1px solid ${({ color }) => color || '#373535'};
+  border: 1px solid ${({ color }) => color || 'var(--primary)'};
   padding: 12px 30px;
 `
 
