@@ -13,6 +13,7 @@ const alias = {
   constants:  `${root}/constants`,
   providers:  `${root}/providers`,
   models:     `${root}/models`,
+  hoc:     `${root}/hoc`,
   root
 }
 

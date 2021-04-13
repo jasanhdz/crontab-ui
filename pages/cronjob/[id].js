@@ -1,25 +1,18 @@
 import { useState } from 'react'
 import { getCronJob, updateCronJob } from 'services/cronjob'
 import { getAllWorkflows } from 'services/workflow'
-import { getCookies, getToken } from 'utils/cookies'
+import { getCookies } from 'utils/cookies'
 import { createSchedulingOfValues } from 'utils/util'
+import Authentication from 'hoc/authentication'
 import Wrapper from 'common/wrapper'
 import CronJobForm from 'cronjob/cronjob-form'
 import Navigation from 'common/navigation'
 
-export async function getServerSideProps(ctx) {
-  const { user_token: token, ...payload } = await getToken(ctx)
-  const newToken = `${payload.token_type} ${payload.access_token}`
-  const cronjob = await getCronJob(token || newToken, ctx.query.id)
-  const workflows = await getAllWorkflows(token || newToken)
-  return {
-    props: {
-      cronjob,
-      workflows,
-      token: payload || null
-    }
-  }
-}
+export const getServerSideProps = Authentication(async (ctx, token) => {
+  const cronjob = await getCronJob(token, ctx.query.id)
+  const workflows = await getAllWorkflows(token)
+  return { props: { cronjob, workflows } }
+})
 
 export default function CronJob(props) {
   const { cronjob, workflows } = props

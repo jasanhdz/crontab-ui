@@ -2,18 +2,15 @@ import { useState } from 'react'
 import { getWorkflow } from 'services/workflow'
 import { getCookies } from 'utils/cookies'
 import { updateWorkflow } from 'services/workflow'
-import createToken from 'services/createToken'
+import Authentication from 'hoc/authentication'
 import Wrapper from 'common/wrapper'
 import WorkFlowForm from 'workflow/workflow-form'
 import Navigation from 'common/navigation'
 
-export async function getServerSideProps(ctx) {
-  const { access_token: token } = await createToken()
+export const getServerSideProps = Authentication(async (ctx, token) => {
   const workflow  = await getWorkflow(token, ctx.query.id)
-  
   return { props: { workflow } }
-
-}
+})
 
 export default function WorkFlow(props) {
   const { workflow } = props

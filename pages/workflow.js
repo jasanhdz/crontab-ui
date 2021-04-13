@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { UniversalPortal } from '@jesstelford/react-portal-universal'
 import { addWorkflow, getAllWorkflows, deleteWorkflow } from 'services/workflow'
 import { getCookies } from 'utils/cookies'
-import createToken from 'services/createToken'
+import Authentication from 'hoc/authentication'
 import Wrapper from 'common/wrapper'
 import Workflow from 'models/workflow'
 import WorkflowList from 'models/workflow-list'
@@ -12,12 +12,10 @@ import Overlay from 'common/overlay'
 import WorkFlowForm from 'workflow/workflow-form'
 import Navigation from 'common/navigation'
 
-export async function getServerSideProps(ctx) {
-  const { access_token: token } = await createToken()
-  const data = await getAllWorkflows(token)
-  
-  return { props: { workflows: data } }
-}
+export const getServerSideProps = Authentication(async (ctx, token) => {
+  const workflows = await getAllWorkflows(token)
+  return { props: { workflows } }
+}) 
 
 export default function WorkflowPage({ workflows = [] }) {
   const [works, setWorks] = useState(workflows)
@@ -57,8 +55,6 @@ export default function WorkflowPage({ workflows = [] }) {
       .catch((error) => console.error(error.message))
   }
 
-
-  
   return (
     <>
       <UniversalPortal selector="#page-portal">

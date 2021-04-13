@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { UniversalPortal } from '@jesstelford/react-portal-universal'
 import { getAllCronJobs, addCronJob, deleteCronJob } from 'services/cronjob'
-import { getCookies, getToken } from 'utils/cookies'
+import { getCookies } from 'utils/cookies'
 import { createSchedulingOfValues } from 'utils/util'
 import { getAllWorkflows } from 'services/workflow'
+import Authentication from 'hoc/authentication'
 import Table from 'common/table/'
 import CronJob from 'models/cronjob'
 import CronJobList from 'models/cronjob-list'
@@ -13,20 +14,12 @@ import Wrapper from 'common/wrapper'
 import CronJobForm from 'cronjob/cronjob-form'
 import Navigation from 'common/navigation'
 
-export async function getServerSideProps(ctx) {
-  const { user_token: token, ...payload } = await getToken(ctx)
-  const newToken = `${payload.token_type} ${payload.access_token}`
-  const cronjobs = await getAllCronJobs(token || newToken)
-  const workflows = await getAllWorkflows(token || newToken)
-  
-  return {
-    props: {
-      cronjobs,
-      workflows,
-      token: payload || null
-    }
-  } 
-}
+
+export const getServerSideProps = Authentication(async (ctx, token) => {
+  const cronjobs = await getAllCronJobs(token)
+  const workflows = await getAllWorkflows(token)
+  return { props: { cronjobs, workflows } }
+})
 
 export default function CronJobPage({ cronjobs = [], workflows = [] }) {
   const [jobs, setJobs] = useState(cronjobs)
@@ -74,7 +67,6 @@ export default function CronJobPage({ cronjobs = [], workflows = [] }) {
     })
     .catch((error) => console.error(error.message))
   }
-
 
   return (
     <>

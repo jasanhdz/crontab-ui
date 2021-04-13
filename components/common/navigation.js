@@ -73,10 +73,12 @@ export default function Navigation() {
     element.current.checked = !element.current.checked
   }
   useEffect(() => {
-    const $body = document.getElementsByTagName('body')[0]
-    const hammer = new window.Hammer($body)
-    hammer.on('swipeleft', toogleChecked)
-    hammer.on('swiperight', toogleChecked)
+    if (window !== 'undefined') {
+      const $body = document.getElementsByTagName('body')[0]
+      const hammer = new Hammer($body)
+      hammer.on('swipeleft', toogleChecked)
+      hammer.on('swiperight', toogleChecked)
+    }
   }, [])
   return (
     <NavigationStyled>
