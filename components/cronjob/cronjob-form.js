@@ -44,9 +44,30 @@ const FormStyled = styled.form`
 export default function CronJobForm(props) {
   const { cronjob, workflows, handleOnSubmit } = props
   const { id, created_at, updated_at, } = cronjob
-  const { handleChange, handleSubmit, values } = useFormik({
+  const { handleChange, handleSubmit, values, errors } = useFormik({
     initialValues: cronJobState(cronjob),
-    onSubmit: handleOnSubmit
+    onSubmit: handleOnSubmit,
+    validate: (values) => {
+      let errors = {}
+
+      if (!values.name) {
+        errors.name = 'Nombre es requerido'
+      } else if (values.name.length < 5) {
+        errors.name = 'Escribe por lo menos 5 caracteres'
+      } else if (values.name.length >= 50) {
+        errors.name = 'El nombre no puede tener más de 50 caracteres'
+      }
+
+      if (!values.description) {
+        errors.description = 'La descripción es requerida'
+      } else if (values.description.length < 5) {
+        errors.description = 'Escribe por lo menos 5 caracteres'
+      } else if (values.description.length >= 50) {
+        errors.description = 'La descripción no puede tener más de 500 caracteres'
+      }
+      
+      return errors
+    }
   })
   return (
     <FormStyled onSubmit={handleSubmit}>
@@ -100,16 +121,22 @@ export default function CronJobForm(props) {
         )}
         <div className="desc">
           <TextField
+            required
             label="Nombre"
             name="name"
             value={values.name}
             onChange={handleChange}
+            error={!!errors.name}
+            label={errors.name}
           />
           <TextField
+            required
             label="Descripción"
             value={values.description}
             onChange={handleChange}
             name="description"
+            error={!!errors.description}
+            label={errors.description}
           />
         </div>
       </div>

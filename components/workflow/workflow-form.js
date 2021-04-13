@@ -1,9 +1,9 @@
 import styled from 'styled-components'
 import TextField from '@material-ui/core/TextField'
-import TextareaAutosize from '@material-ui/core/TextareaAutosize'
 import Button from 'common/button'
 import { useFormik } from 'formik'
 import PropTypes from 'prop-types'
+import TextareaAutosize from 'common/textarea'
 
 const FormStyled = styled.form`
   display: grid;
@@ -12,21 +12,6 @@ const FormStyled = styled.form`
     display: inherit;
     grid-template-columns: repeat(2, 1fr);
     grid-column-gap: 10px;
-  }
-  .textarea {
-    resize: none;
-    padding: 18.5px 14px;
-    font-size: 1rem;
-    font-family: var(--primaryFont);
-    outline: 0;
-    border-radius: 4px;
-    &::placeholder {
-      font-family: var(--primaryFont);
-    }
-    &:focus {
-      border-color: var(--primary);
-      border-width: 2px;
-    }
   }
   .submit {
     width: 100%;
@@ -43,10 +28,27 @@ const FormStyled = styled.form`
 export default function WorkFlowForm(props) {
   const { workflow, onSubmit } = props
   const { id, created_at, updated_at } = workflow
-  const { handleSubmit, handleChange, values } = useFormik({
+  const { handleSubmit, handleChange, values, errors, isSubmitting } = useFormik({
     initialValues: {
       name: workflow.name,
       description: workflow.description,
+    },  
+    validate: (values) => {
+      let errors = {}
+
+      if (!values.name) {
+        errors.name = 'Nombre es requerido'
+      } else if (values.name.length >= 50) {
+        errors.name = 'El nombre no puede tener más de 50 caracteres'
+      }
+
+      if (!values.description) {
+        errors.description = 'La descripción es requerida'
+      } else if (values.description.length >= 50) {
+        errors.description = 'La descripción no puede tener más de 500 caracteres'
+      }
+
+      return errors
     },
     onSubmit: onSubmit
   })
@@ -83,10 +85,11 @@ export default function WorkFlowForm(props) {
         value={values.name}
         onChange={handleChange}
         name="name"
+        error={!!errors.name}
+        helperText={errors.name}
       />
       <TextareaAutosize
         required
-        className="textarea"
         variant="outlined"
         placeholder="Escribe una descripción"
         rowsMin={5}
@@ -94,9 +97,11 @@ export default function WorkFlowForm(props) {
         value={values.description}
         onChange={handleChange}
         name="description"
+        error={!!errors.description}
+        label={errors.description}
       />
       <div className="submit">
-        <Button fullWidth>Enviar</Button>
+        <Button disabled={isSubmitting} type="submit" fullWidth>Enviar</Button>
       </div>
     </FormStyled>
   )
@@ -110,5 +115,5 @@ WorkFlowForm.propTypes = {
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired
   }).isRequired,
-  onSubmit: PropTypes.func.isRequired
+  onSubmit: PropTypes.func.isRequired,
 }

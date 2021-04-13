@@ -32,13 +32,14 @@ export default function WorkflowPage(props) {
   }
 
   const handleSubmit = async (values) => {
-    const { user_token: token } = getCookies()
-    const res = await addWorkflow(token, values)
-    if (res.success) {
-      const newWorkflow = Workflow.workflowByPayload(res.payload) 
-      setWorks([...works, newWorkflow])
-      setIsActiveModal(false)
-    }
+    console.log(values)
+    // const { user_token: token } = getCookies()
+    // const res = await addWorkflow(token, values)
+    // if (res.success) {
+    //   const newWorkflow = Workflow.workflowByPayload(res.payload) 
+    //   setWorks([...works, newWorkflow])
+    //   setIsActiveModal(false)
+    // }
   }
 
   const handleDeleteItems = (selected, setSelected) => {

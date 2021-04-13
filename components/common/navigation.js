@@ -69,19 +69,19 @@ const NavigationStyled = styled.div`
 
 export default function Navigation() {
   const element = useRef(null)
-  function toogleChecked() {
-    element.current.checked = !element.current.checked
-  }
-  useEffect(() => {
-    if (window !== 'undefined') {
-      const $body = document.getElementsByTagName('body')[0]
-      if (Hammer) {
-        const hammer = new Hammer($body)
-        hammer.on('swipeleft', toogleChecked)
-        hammer.on('swiperight', toogleChecked)
-      } 
-    }
-  }, [])
+  // function toogleChecked() {
+  //   element.current.checked = !element.current.checked
+  // }
+  // useEffect(() => {
+  //   if (window !== 'undefined') {
+  //     const $body = document.getElementsByTagName('body')[0]
+  //     if (window.Hammer !== 'undefined') {
+  //       const hammer = new Hammer($body)
+  //       hammer.on('swipeleft', toogleChecked)
+  //       hammer.on('swiperight', toogleChecked)
+  //     } 
+  //   }
+  // }, [])
   return (
     <NavigationStyled>
       <Wrapper>
