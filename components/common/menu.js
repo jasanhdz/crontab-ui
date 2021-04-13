@@ -27,13 +27,13 @@ const MenuStyled = styled.div`
   bottom: 0;
   padding: 1rem;
   background-color: var(--primary);
+  opacity: 0.9;
   transition: 0.4s;
   .items {
     position: absolute;
-    /* transform: translateX(296px); */
     transform: translateY(50%);
     text-align: center;
-    width: 100%;
+    width: calc(100% - 2rem);
     bottom: 50%;
     margin: 0;
     padding: 0;
@@ -56,6 +56,8 @@ const MenuStyled = styled.div`
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    background-color: transparent;
+    opacity: 1;
     .items {
       transform: none;
       position: static;

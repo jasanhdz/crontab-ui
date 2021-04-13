@@ -1,14 +1,12 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import Container from 'common/wrapper'
 import Menu from 'common/menu'
-import Overlay from 'common/overlay'
 import CloseIcon from '@material-ui/icons/Close'
 import MenuIcon from '@material-ui/icons/Menu'
 import Link from 'next/link'
  
 const MenuStyled = styled(Menu)``
-const OverlayStyled = styled(Overlay)``
 
 const Wrapper = styled(Container)`
   display: flex;
@@ -35,6 +33,7 @@ const NavigationStyled = styled.div`
   .toogle-button {
     position: relative;
     z-index: 5;
+    font-size: 30px;
     .close {
       display: none;
     }
@@ -58,9 +57,6 @@ const NavigationStyled = styled.div`
     ~ ${MenuStyled} {
       transform: translateX(0)
     }
-    ~ ${OverlayStyled} {
-      visibility: visible
-    }
   }
 
   @media screen and (min-width: 1024px) {
@@ -72,10 +68,16 @@ const NavigationStyled = styled.div`
 `
 
 export default function Navigation() {
-  const element = useRef(null);
-  const handleClick = () => {
-    element.current.checked = false
+  const element = useRef(null)
+  function toogleChecked() {
+    element.current.checked = !element.current.checked
   }
+  useEffect(() => {
+    const $body = document.getElementsByTagName('body')[0]
+    const hammer = new window.Hammer($body)
+    hammer.on('swipeleft', toogleChecked)
+    hammer.on('swiperight', toogleChecked)
+  }, [])
   return (
     <NavigationStyled>
       <Wrapper>
@@ -84,10 +86,9 @@ export default function Navigation() {
           <a className="logo">Booleand</a>
         </Link>
         <label htmlFor="toogle-button" className="toogle-button">
-          <MenuIcon className="open" size={26} color="white" />
-          <CloseIcon className="close" size={26} color="#262626" />
+          <MenuIcon className="open" fontSize="inherit" />
+          <CloseIcon className="close" fontSize="inherit" />
         </label>
-      <OverlayStyled onClick={handleClick} />
       <MenuStyled />
       </Wrapper>
     </NavigationStyled>
