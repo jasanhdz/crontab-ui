@@ -18,6 +18,7 @@ const DefaultStyles = createGlobalStyle`
 
   body {
     font-family: var(--primaryFont);
+    margin: 0;
   }
 `
 

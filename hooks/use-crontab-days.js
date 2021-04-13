@@ -4,8 +4,8 @@ import { DAYS, getTimeValues } from 'utils/date-values'
 import { addCheckedValue } from 'utils/crontab'
 
 export default function useCronTabDays(initialState) {
-  const [manyWeekenday, setManyWeekenday] = useState(addCheckedValue(initialState.OF_WEEKDAY.MANY_WEEKDAY, ',', DAYS))
-  const [daysOfMonth, setDaysOfMonth] = useState(addCheckedValue(initialState.OF_MONTH.MANY_MONTH, ',', getTimeValues(1, 31)))
+  const [manyWeekenday, setManyWeekenday] = useState(addCheckedValue(initialState.OF_WEEKDAY.value, ',', DAYS, initialState.OF_WEEKDAY.MANY_WEEKDAY))
+  const [daysOfMonth, setDaysOfMonth] = useState(addCheckedValue(initialState.OF_MONTH.value, ',', getTimeValues(1, 31), initialState.OF_MONTH.MANY_MONTH))
   const [state, setState] = useState(initialState)
   const onChange = event => {
     const value = event.target.value
@@ -104,7 +104,7 @@ export default function useCronTabDays(initialState) {
     setState({ ...state })
   }
   const handleChangeLastWeekdayOfMonth = event => {
-    const value = `${DAYS.lastIndexOf(event.target.value) + 1}L`
+    const value = `${event.target.value}L`
     state.OF_WEEKDAY.LAST_WEEKDAY_OF_MONTH = value
     state.OF_WEEKDAY.value = value
     setState({ ...state })
@@ -127,7 +127,7 @@ export default function useCronTabDays(initialState) {
     if (name === 'one') {
       current[1] = event.target.value
     } else {
-      current[0] = DAYS.lastIndexOf(event.target.value) + 1
+      current[0] = event.target.value
     }
     state.OF_WEEKDAY.NUMBER_X_WEEKDAY_OF_MONTH = `${current[0]}#${current[1]}`
     state.OF_WEEKDAY.value = `${current[0]}#${current[1]}`

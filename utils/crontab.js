@@ -1,8 +1,12 @@
 import { OPTION_DAY_ALL as OPTION_DAY, OPTIONS } from 'constants/crontab'
 
-export function addCheckedValue(stringValue, split, items) {
+export function addCheckedValue(stringValue, split, items, defaultString) {
   if (stringValue.includes(split)) {
     const values = stringValue.split(split).map(str => isNaN(str) ? str : Number(str))
+    return items.map(item => ({ ...item, checked: values.includes(item.value) }))
+  }
+  if (defaultString && defaultString.includes(split)) {
+    const values = defaultString.split(split).map(str => isNaN(str) ? str : Number(str))
     return items.map(item => ({ ...item, checked: values.includes(item.value) }))
   }
   return items.map(item => ({ ...item, checked: false }))

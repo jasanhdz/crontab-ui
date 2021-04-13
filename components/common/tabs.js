@@ -37,8 +37,14 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     width: '100%',
-    backgroundColor: theme.palette.background.paper,
+    // backgroundColor: theme.palette.background.paper,
   },
+  appBar: {
+    boxShadow: 'none',
+  },
+  tabs: {
+    fontWeight: 600,
+  }
 }))
 
 export default function Tabbs({ options }) {
@@ -50,7 +56,7 @@ export default function Tabbs({ options }) {
   }
   return (
     <div className={clasess.root}>
-      <AppBar position="static" color="default">
+      <AppBar className={clasess.appBar} position="static" color="transparent">
         <Tabs
           value={value}
           onChange={handleChange}
@@ -59,6 +65,7 @@ export default function Tabbs({ options }) {
           indicatorColor="primary"
           textColor="primary"
           aria-label="scrollable force tabs example"
+          className={clasess.tabs}
         >
           {options.map((item, idx) => <Tab key={idx} label={item.title} {...a11yProps(idx)} /> )}
         </Tabs>

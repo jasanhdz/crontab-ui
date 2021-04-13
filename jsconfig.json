@@ -8,15 +8,23 @@
       "providers": [
         "./providers/*"
       ],
+      "workflow/*": [
+        "./components/workflow/*"
+      ],
+      "cronjob/*": [
+        "./components/cronjob/*"
+      ],
       "~*/": [
         "components/*",
         "common/*",
-        "home/*",
+        "cronjob/*",
+        "workflow/*",
         "utils/*",
         "theme/*",
         "hooks/*",
         "services/*",
-        "constants/*"
+        "constants/*",
+        "models/*"
       ],
       "test/*": [
         "test/*"

@@ -1,5 +1,5 @@
-import { Checkbox, FormControlLabel, FormGroup, Radio } from '@material-ui/core'
-import { FormSecondStyled, SelectStyled } from './styles'
+import { Checkbox, FormGroup, Radio } from '@material-ui/core'
+import { FormSecondStyled, SelectStyled, FormControlLabel } from './styles'
 import useCronTab from 'hooks/use-crontab'
 import PropTypes from 'prop-types'
 import { OPTIONS } from 'constants/crontab'
@@ -14,7 +14,7 @@ export default function FormSecond({ cronState, base, values }) {
     handleChangeBetween
   } = useCronTab(cronState, values)
   return (
-    <FormSecondStyled>
+    <FormSecondStyled label={isNaN(items[0].tile) ? '120px' : '45px'}>
       <div className="center">
         <Radio
           checked={state.current === OPTIONS.EVERY}
@@ -30,9 +30,9 @@ export default function FormSecond({ cronState, base, values }) {
           onChange={handleOption}
           value={OPTIONS.START}
         />
-        <p>
+        <span>
           Cada
-        </p>
+        </span>
         <SelectStyled
           disabled={state.current !== OPTIONS.START}
           value={state.START.split('/')[1] || items[0].value}
@@ -41,7 +41,7 @@ export default function FormSecond({ cronState, base, values }) {
           items={items}
           required
         />
-        {base}(s) comenzando desde el {base}
+        <span>{base}(s) comenzando desde el {base}</span>
         <SelectStyled
           disabled={state.current !== OPTIONS.START}
           value={state.START.split('/')[0] || items[0].value}
@@ -52,12 +52,12 @@ export default function FormSecond({ cronState, base, values }) {
         />
       </div>
       <div className="center">
-      <Radio
-        checked={state.current === OPTIONS.MANY}
-        onChange={handleOption}
-        value={OPTIONS.MANY}
-      />
-        <p>{base}s especificos (elige uno o muchos)</p>
+        <Radio
+          checked={state.current === OPTIONS.MANY}
+          onChange={handleOption}
+          value={OPTIONS.MANY}
+        />
+        {base}s especificos (elige uno o muchos)
         <FormGroup className="grid">
           {items.map((item, idx) => (
             <FormControlLabel
@@ -80,9 +80,9 @@ export default function FormSecond({ cronState, base, values }) {
           onChange={handleOption}
           value={OPTIONS.BETWEEN}
         />
-        <p>
+        <span>
           Cada {base} entre el {base}
-        </p>
+        </span>
         <SelectStyled
           disabled={state.current !== OPTIONS.BETWEEN}
           value={state.BETWEEN.split('-')[0] || items[0].value}
