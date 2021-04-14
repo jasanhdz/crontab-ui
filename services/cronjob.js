@@ -34,11 +34,11 @@ export async function getCronJob(token, id) {
 }
 
 export async function addCronJob(token, payload) {
+  console.log(token)
   try {
     const res = await fetch(`${BASE_API_URL}/api/cronjob`, {
       method: 'POST',
-      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-      Authorization: token,
+      headers: { Accept: 'application/json', 'Content-Type': 'application/json', Authorization: token, },
       body: JSON.stringify(payload)
     })
     const data = await res.json()
@@ -52,8 +52,7 @@ export async function updateCronJob(token, id, payload) {
   try {
     const res = await fetch(`${BASE_API_URL}/api/cronjob/${id}`, {
       method: 'PUT',
-      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-      Authorization: token,
+      headers: { Accept: 'application/json', 'Content-Type': 'application/json', Authorization: token, },
       body: JSON.stringify(payload)
     })
     const data = await res.json()
