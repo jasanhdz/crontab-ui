@@ -87,7 +87,7 @@ export default function Navigation() {
       <Wrapper>
         <input ref={element} className="checkbox" type="checkbox" id="toogle-button" name="active" />
         <Link href="/cronjob">
-          <a className="logo">Booleand</a>
+          <a className="logo">Boolean</a>
         </Link>
         <label htmlFor="toogle-button" className="toogle-button">
           <MenuIcon className="open" fontSize="inherit" />
